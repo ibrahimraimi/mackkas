@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="SignUp.css">
+</head>
+<body>
+    <div class="bg_img">
+        <div class="blank"></div>
+        <img class="bg-img" src="images/Suit4.jpg" alt="">
+        <img class="bg-img2" src="images/Gown4(Pink).webp" alt="">
+    </div>
+    <div class="formbody">   
+
+    <div class="signup">
+        <form action="" id="form">
+        <span id="header">Create Account</span><br>
+       
+        <input maxlength="10" type="text" id="name" placeholder="Username..." required>
+        <span class="hide"><br>Username must contain letters</span>
+        <br><br>
+         
+        
+        <input type="text" id="email" placeholder="email..." required>
+        <span class="email_hide"><br>Invalid Email</span>
+        <br><br>
+
+        <input maxlength="16" type="password" id="password" placeholder="password..." required>
+        <span class="password_hide"><br>Password MUST contain at least 6 chacters</span>
+        <br><br>
+
+        <button id="btnform" style="background-color: greenyellow;" type="submit">Signup</button>
+         
+        <br>
+         <span style="color: azure;">If already have account <a style="color:rgb(159, 17, 17)" href="LoginPage.html">Login</a></span>
+        </form>
+    
+    </div>
+    
+    </div>
+
+    <div class="successful_hide">
+        <h3>Account Successfully Created</h3>
+    </div>
+
+    <h3 class="validate_hide">Please Validate Your Form</h3>
+    
+
+    <script src="SignUp.js"></script>
+</body>
+</html>

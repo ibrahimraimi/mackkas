@@ -1,0 +1,295 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+   
+}
+
+::-webkit-scrollbar{
+    width: 0;
+  }
+  
+.body_container{
+    display: flex;
+    background: linear-gradient(rgb(7, 18, 88), rgb(4, 11, 69));
+    width: 100%;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.body{
+    width: 100vh;
+    display: grid;
+    grid-template-rows: 100px 500px 1fr;
+    flex-direction: column;
+   
+    
+}
+
+.logo{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.logo em{
+    color: rgb(250, 215, 15); 
+    font-size: 20px;
+    margin-bottom: 30px;
+    animation: fadeIn 3s;
+}
+
+.logo h1{
+    color: rgb(196, 193, 193);
+    font-size: 50px;
+    text-align: center;
+    letter-spacing: 2px;
+    animation: fadeIn 3s;
+}
+
+.logo img{
+   margin-top: 70px;
+   width: 300px;
+  align-self: center;
+}
+
+.logo_img_hide{
+ transform: translateY(700%);
+}
+
+.logo_img{
+    transform: translateY(0%);
+    transition: 1s; 
+}
+
+@keyframes fadeIn{
+    from {
+        opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+}
+
+@keyframes fadeRight{
+    from {
+        opacity: 0;
+        transform: translateX(-30px) scale(0.9);
+    }
+
+    to {
+      opacity: 1;
+      transform: translatex(0px) scale(1);
+    }
+}
+
+.nav-bars{
+    display: flex;
+    margin-top: 20px;
+    justify-content: center;
+    width: 100%;
+    color: rgb(250, 215, 15);  
+    gap: 5%;
+    animation: fadeRight 3s;
+    
+}
+
+.nav-bars span{
+    cursor: pointer;
+    font-size: large;
+}
+
+.nav-bars a{
+  color: gold;
+}
+
+.imgs{
+    object-fit: cover;
+    width: 100%;
+    height: 300px;
+   
+}
+
+#img_1{
+
+}
+
+.img1{
+  position: relative;
+}
+
+.img_div{
+ margin-top: 0px;
+ width: 100%;
+ display: grid;
+ gap: 10px;
+ align-items: center;
+ grid-template-columns:repeat(3, 1fr);
+
+}
+
+.category{
+    border-top: 2px solid white;
+    display: flex;
+    width: 100%;
+    background-color: black;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.suit_opac{
+ position: absolute;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ top: 0;
+ left: 0%;
+ height: 300px;
+ width: 100%;
+ background-color: black;
+ opacity: 0;
+ color: white;
+ font-size: large;
+ transition: .5s;
+}
+
+.suit_opac:hover{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+  
+    height: 300px;
+    width: 100%;
+    background-color: black;
+    opacity: .6;
+    color: white;
+    font-size: large;  
+}
+
+.aboutUs{
+    background: linear-gradient(to right, #000000, #0d0d0d);
+    padding: 80px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.about_container{
+    max-width: 800px;
+    color: #ddd;
+    text-align: center;
+    line-height: 1.8;
+}
+
+.about_container h2{
+    font-size: 36px;
+    color: gold;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+}
+
+.about_container p{
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.about_container ul{
+    list-style: none;
+    margin: 30px 0;
+}
+
+.about_container ul li{
+    margin: 10px 0;
+    font-size: 17px;
+    position: relative;
+}
+
+.about_container ul li::before{
+    content: "✦ ";
+    color: gold;
+}
+
+.mission{
+    margin-top: 30px;
+    font-size: 20px;
+    color: gold;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+a{
+    text-decoration: none;
+}
+
+@media (max-width : 768px) {
+
+    .img_div{
+        grid-template-columns:repeat(2, 1fr);
+       }
+
+}
+
+@media (max-width : 425px) {
+
+    .img_div{
+       grid-template-columns:repeat(1, 1fr);
+     }
+
+}
+
+@media (max-width : 360px) {
+    .nav-bars{
+        display: flex;
+        margin-top: 20px;
+        justify-content: center;
+        width: 100%;
+        color: rgb(250, 215, 15);  
+        gap: 5%;
+        animation: fadeRight 3s;
+        
+    }
+    
+    .nav-bars span{
+        cursor: pointer;
+        font-size: small;
+    }
+
+    .logo{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+      }
+      
+      .logo em{
+          color: rgb(250, 215, 15); 
+          font-size: 20px;
+          margin-bottom: 30px;
+          animation: fadeIn 3s;
+      }
+      
+      .logo h1{
+          color: rgb(196, 193, 193);
+          font-size: 40px;
+          text-align: center;
+          letter-spacing: 2px;
+          animation: fadeIn 3s;
+      }
+      
+      .logo img{
+         margin-top: 70px;
+         width: 240px;
+        align-self: center;
+      }
+
+}
+
+
