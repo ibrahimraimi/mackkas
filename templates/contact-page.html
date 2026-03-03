@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mackkas | Product Details</title>
+    <title>Mackkas | Contact Us</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/product-detail.css') }}">
-    <!-- We also need the catalog CSS for the cart drawer styles -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/product-catalog.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/contact-page.css') }}">
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon/favicon.ico') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='images/favicon/apple-touch-icon.png') }}">
@@ -23,7 +21,7 @@
                     <li><a href="{{ url_for('product_catalog') }}" class="nav_link">Shop</a></li>
                     <li><a href="{{ url_for('product_catalog') }}" class="nav_link">New in</a></li>
                     <li><a href="{{ url_for('about_page') }}" class="nav_link">About</a></li>
-                    <li><a href="{{ url_for('contact_page') }}" class="nav_link">Contact</a></li>
+                    <li><a href="{{ url_for('contact_page') }}" class="nav_link active">Contact</a></li>
                 </ul>
 
                 <a href="/" class="nav__logo">Mackkas</a>
@@ -35,9 +33,8 @@
                     <a href="{{ url_for('profile_page') }}" class="nav__icon" aria-label="Account">
                         <iconify-icon icon="lucide:user"></iconify-icon>
                     </a>
-                    <button class="nav__icon nav__cart" id="openCartBtn" aria-label="Cart">
+                    <button class="nav__icon nav__cart" aria-label="Cart" onclick="window.location.href='{{ url_for('product_catalog') }}';">
                         <iconify-icon icon="lucide:shopping-bag"></iconify-icon>
-                        <span class="badge" id="cartCountBadge">0</span>
                     </button>
                 </div>
             </nav>
@@ -45,39 +42,53 @@
     </header>
 
     <main class="container">
-        <div id="productDetailContainer">
-            <!-- Product details will be dynamically loaded here -->
-            <div style="padding: 100px 0; text-align: center;">Loading product details...</div>
-        </div>
+        <section class="contact">
+            <div class="contact__grid">
+                <div class="contact__info">
+                    <span class="contact__eyebrow">Connect</span>
+                    <h1 class="contact__title">We'd love to hear from you.</h1>
+                    <p class="contact__text">Whether you have a question about our collections, craftsmanship, or simply want to share your experience, our team is here to assist you with the promptness and care you deserve.</p>
+                    
+                    <div class="contact__details">
+                        <div class="contact__detail-item">
+                            <h4>Atelier Address</h4>
+                            <p>12 Savile Row, Mayfair<br>London W1S 3PQ, UK</p>
+                        </div>
+                        <div class="contact__detail-item">
+                            <h4>Inquiries</h4>
+                            <p>concierge@mackkas.com<br>+44 (0) 20 7123 4567</p>
+                        </div>
+                        <div class="contact__detail-item">
+                            <h4>Operating Hours</h4>
+                            <p>Monday — Friday: 10:00 — 18:00<br>Saturday: 11:00 — 17:00</p>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Related Products Section -->
-        <section class="related-products">
-            <h2 class="related-products__title">You May Also Like</h2>
-            <div class="products__grid" id="relatedProductsGrid">
-                <!-- Related products will be loaded here -->
+                <div class="contact__form-wrapper">
+                    <form class="contact__form" id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" placeholder="E.g. Alexander McQueen" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="E.g. alex@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" placeholder="Collection Inquiry" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" placeholder="How can we assist you today?" required></textarea>
+                        </div>
+                        <button type="submit" class="button button--primary contact__submit">Send Message</button>
+                    </form>
+                </div>
             </div>
         </section>
     </main>
-
-    <!-- Cart Drawer (Common) -->
-    <div class="cart_blocker_hide" id="cartOverlay"></div>
-    <aside class="cart-drawer close_cart" id="cartDrawer">
-        <div class="cart-drawer__header">
-            <h2 class="cart-drawer__title">Shopping Bag</h2>
-            <button class="close-cart-btn" id="closeCartBtn">
-                <iconify-icon icon="lucide:x"></iconify-icon>
-            </button>
-        </div>
-        <div class="cart-items" id="cartItemsContainer"></div>
-        <div class="cart-drawer__footer">
-            <div class="cart-summary__row">
-                <span>Subtotal</span>
-                <span id="cartSubtotal">$0.00</span>
-            </div>
-            <button class="button button--primary w-full" style="margin-bottom: 15px;">Proceed to Checkout</button>
-            <button class="button button--outline w-full" id="continueShoppingBtn">Continue Shopping</button>
-        </div>
-    </aside>
 
     <footer class="footer">
         <div class="container">
@@ -121,10 +132,12 @@
         </div>
     </footer>
 
-    <!-- Pass the product ID from Flask to JS -->
     <script>
-        const CURRENT_PRODUCT_ID = {{ product_id }};
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message. Our concierge team will be in touch shortly.');
+            this.reset();
+        });
     </script>
-    <script src="{{ url_for('static', filename='js/product-detail.js') }}"></script>
 </body>
 </html>

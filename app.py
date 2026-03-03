@@ -69,6 +69,10 @@ def search_page():
 def about_page():
     return render_template('about-page.html')
 
+@app.route('/contact')
+def contact_page():
+    return render_template('contact-page.html')
+
 @app.route('/api/auth/signup', methods=['POST'])
 def signup():
     data = request.json

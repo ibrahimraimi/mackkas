@@ -1,0 +1,117 @@
+/* Contact Page Styles - Minimalist (LINEA Style) */
+
+.contact {
+  padding: var(--spacing-24) 0;
+}
+
+.contact__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-16);
+  align-items: start;
+}
+
+.contact__info {
+  padding-right: var(--spacing-12);
+}
+
+.contact__eyebrow {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--color-neutral-400);
+  margin-bottom: var(--spacing-4);
+  display: block;
+}
+
+.contact__title {
+  font-family: var(--font-serif);
+  font-size: var(--text-4xl);
+  margin-bottom: var(--spacing-8);
+  line-height: 1.1;
+}
+
+.contact__text {
+  font-size: var(--text-base);
+  color: var(--color-neutral-600);
+  line-height: 1.8;
+  margin-bottom: var(--spacing-12);
+}
+
+.contact__details {
+  margin-top: var(--spacing-12);
+}
+
+.contact__detail-item {
+  margin-bottom: var(--spacing-8);
+}
+
+.contact__detail-item h4 {
+  font-family: var(--font-serif);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: var(--spacing-2);
+  color: var(--color-black);
+}
+
+.contact__detail-item p {
+  font-size: var(--text-sm);
+  color: var(--color-neutral-500);
+}
+
+/* Contact Form */
+.contact__form {
+  display: grid;
+  gap: var(--spacing-6);
+}
+
+.form-group {
+  display: grid;
+  gap: var(--spacing-2);
+}
+
+.form-group label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-black);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--color-neutral-200);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  transition: border-color var(--transition-base);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-black);
+}
+
+.form-group textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.contact__submit {
+  margin-top: var(--spacing-4);
+  align-self: start;
+}
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+  .contact__grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-12);
+  }
+  .contact__info {
+    padding-right: 0;
+  }
+}
