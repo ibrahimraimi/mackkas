@@ -1,40 +1,53 @@
-let Loginform = document.getElementById("loginform");
-let Acc_succ = document.querySelector(".successful_hide")
-let Validate_err = document.querySelector(".validate_hide")
+/* Mackkas Login Logic */
 
-Loginform.onsubmit = async function(e){
-  e.preventDefault();
-  
-  let username = document.getElementById("username").value;
-  let password = document.getElementById("password").value;
- 
-  try {
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })
-    });
+const Login_Form = document.getElementById("loginform");
+const Success_Toast = document.getElementById("successToast");
+const Error_Toast = document.getElementById("errorToast");
 
-    const result = await response.json();
+Login_Form.onsubmit = async function(e) {
+    e.preventDefault();
+    
+    // Reset toasts
+    Success_Toast.className = "successful_hide";
+    Error_Toast.className = "validate_hide";
+    
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    
+    const submitBtn = document.getElementById("btnform");
+    const originalBtnText = submitBtn.textContent;
+    submitBtn.textContent = "Signing In...";
+    submitBtn.disabled = true;
 
-    if (response.ok) {
-      // Save currently logged-in user info in sessionStorage for frontend display
-      sessionStorage.setItem("currentUser", JSON.stringify({ Name: result.user.username }));
+    try {
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
 
-      Acc_succ.className = "successful"
-      Validate_err.className = "validate_hide";
+        const result = await response.json();
 
-      setTimeout(() => {
-        Acc_succ.className = "successful_hide"
-        window.location.href = "/mackkas";
-      }, 2000);
-    } else {
-      Validate_err.textContent = result.message || "Login failed";
-      Validate_err.className = "validate";
+        if (response.ok) {
+            // Save currently logged-in user info in sessionStorage for frontend display
+            sessionStorage.setItem("currentUser", JSON.stringify({ Name: result.user.username }));
+
+            Success_Toast.className = "successful";
+            
+            setTimeout(() => {
+                window.location.href = "/mackkas";
+            }, 1500);
+        } else {
+            Error_Toast.querySelector("h3").textContent = result.message || "Invalid credentials";
+            Error_Toast.className = "validate";
+            submitBtn.textContent = originalBtnText;
+            submitBtn.disabled = false;
+        }
+    } catch (error) {
+        console.error("Login error:", error);
+        Error_Toast.querySelector("h3").textContent = "An error occurred. Please try again.";
+        Error_Toast.className = "validate";
+        submitBtn.textContent = originalBtnText;
+        submitBtn.disabled = false;
     }
-  } catch (error) {
-    console.error("Login error:", error);
-    Validate_err.textContent = "An error occurred. Please try again.";
-    Validate_err.className = "validate";
-  }
-}
+};

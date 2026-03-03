@@ -3,79 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Mackkas | Timeless Elegance</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home-page.css') }}">
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 </head>
 <body>
-    <div class="body_container">
-        <div class="body">
+    <header class="header">
+        <div class="header__topbar">
+            <div class="container">
+                <p class="text-sm">Free shipping on orders over $200 | Premium packaging included</p>
+            </div>
+        </div>
+        
+        <nav class="header__nav">
+            <div class="container">
+                <div class="nav__content">
+                    <a href="/" class="nav__logo">
+                        <img src="{{ url_for('static', filename='images/mackkas-brand-logo.png') }}" alt="Mackkas" />
+                        <span class="nav__tagline">Dress with style...</span>
+                    </a>
+                    
+                    <ul class="nav__menu">
+                        <li class="nav__item"><a href="{{ url_for('product_catalog') }}" class="nav__link">Shop All</a></li>
+                        <li class="nav__item"><a href="{{ url_for('product_catalog') }}" class="nav__link">Men</a></li>
+                        <li class="nav__item"><a href="{{ url_for('product_catalog') }}" class="nav__link">Women</a></li>
+                        <li class="nav__item"><a href="{{ url_for('product_catalog') }}" class="nav__link">Accessories</a></li>
+                    </ul>
+                    
+                    <div class="nav__actions">
+                        <div class="nav__search">
+                            <button class="nav__icon" aria-label="Search">
+                                <iconify-icon icon="lucide:search"></iconify-icon>
+                            </button>
+                        </div>
+                        <a href="{{ url_for('login_page') }}" class="nav__icon" aria-label="Account">
+                            <iconify-icon icon="lucide:user"></iconify-icon>
+                        </a>
+                        <button class="nav__icon nav__cart" aria-label="Cart" onclick="window.location.href='{{ url_for('product_catalog') }}';">
+                            <iconify-icon icon="lucide:shopping-bag"></iconify-icon>
+                            <span class="badge">0</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
 
-            <div class="nav-bars">
-                <a href="{{ url_for('signup_page') }}">SignUp</a>
-                <a href="{{ url_for('login_page') }}">Login</a>
-                <a href="#about">About Us</a>
+    <main>
+        <section class="hero">
+            <div class="hero__content">
+                <div class="container">
+                    <div class="hero__text">
+                        <span class="hero__eyebrow">New Collection</span>
+                        <h1 class="hero__title">
+                            Timeless Elegance<br/>
+                            <span class="hero__title-accent">Meets Modern Style</span>
+                        </h1>
+                        <p class="hero__description">
+                            Discover our curated collection of premium suits, elegant gowns, 
+                            and luxury accessories crafted for those who appreciate excellence.
+                        </p>
+                        <div class="hero__cta">
+                            <a href="{{ url_for('product_catalog') }}" class="button button--primary button--large">
+                                Shop Collection
+                            </a>
+                            <a href="#about" class="button button--outline button--large">
+                                Our Story
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
             
-           <div class="logo">
-               <img class="logo_img_hide" src="{{ url_for('static', filename='images/mackkas-brand-logo.png') }}" alt="Mackkas Logo">
-               <h1>MACKKAS </h1>  
-               <em>dress with style...</em>  
-           </div>
-           
-           <div class="category">
-             <div class="img_div">
-                 <div class="img1"> 
-                     <img class="imgs" id="img_1" src="{{ url_for('static', filename='images/formal-brown-suit.jpg') }}" alt="Suits">
-                     <div class="suit_opac"><h1>Suits</h1></div>
-                </div>
-                 <div class="img1"> <img class="imgs" src="{{ url_for('static', filename='images/red-wine-gown.png') }}" alt="Gowns">
-                    <div class="suit_opac"><h1>Gowns</h1></div>
-                </div>
-                 <div class="img1"> <img class="imgs" src="{{ url_for('static', filename='images/leather-handbag-brown.jpg') }}" alt="Bags">
-                    <div class="suit_opac"><h1>Bags</h1></div>
-                </div>
-                 <div class="img1"> <img class="imgs" src="{{ url_for('static', filename='images/stylish-heels-shoes.jpg') }}" alt="Shoes">
-                    <div class="suit_opac"><h1>Shoes</h1></div>
-                </div>
-                 <div class="img1"> <img class="imgs" src="{{ url_for('static', filename='images/gold-black-watch.jpg') }}" alt="Watches">
-                    <div class="suit_opac"><h1>Watches</h1></div>
-                </div>
-                 <div class="img1"> <img class="imgs" src="{{ url_for('static', filename='images/fashion-accessory-others.jpg') }}" alt="Others">
-                    <div class="suit_opac"><h1>Others</h1></div>
-                </div>
-            </div>   
-          </div>
-          <div class="aboutUs" id="about">
-    <div class="about_container">
-        <h2>About Us</h2>
-        <p>
-            Welcome to Mackkas, where luxury meets timeless style.
-        </p>
+            <div class="hero__image">
+                <img src="{{ url_for('static', filename='images/hero-collection.jpg') }}" alt="Mackkas Collection" class="hero__bg" onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/formal-brown-suit.jpg') }}';">
+                <div class="hero__overlay"></div>
+            </div>
+            
+            <div class="hero__scroll">
+                <span>Scroll to explore</span>
+                <iconify-icon icon="lucide:chevron-down" class="hero__scroll-icon"></iconify-icon>
+            </div>
+        </section>
 
-        <p>
-            At Mackkas, we believe fashion is more than clothing — it is confidence, identity, and presence.
-            Our store was created for individuals who value quality, sophistication, and distinction.
-        </p>
+        <section class="categories">
+            <div class="container">
+                <h2 class="section__title">Shop by Category</h2>
+                
+                <div class="categories__grid">
+                    <a href="{{ url_for('product_catalog') }}" class="category-card category-card--large">
+                        <img src="{{ url_for('static', filename='images/category-men.jpg') }}" alt="Men's Collection" onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/formal-brown-suit.jpg') }}';">
+                        <div class="category-card__content">
+                            <h3 class="category-card__title">Men's Collection</h3>
+                            <span class="category-card__link">Shop Now →</span>
+                        </div>
+                    </a>
+                    
+                    <a href="{{ url_for('product_catalog') }}" class="category-card category-card--large">
+                        <img src="{{ url_for('static', filename='images/category-women.jpg') }}" alt="Women's Collection" onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/red-wine-gown.png') }}';">
+                        <div class="category-card__content">
+                            <h3 class="category-card__title">Women's Collection</h3>
+                            <span class="category-card__link">Shop Now →</span>
+                        </div>
+                    </a>
+                    
+                    <a href="{{ url_for('product_catalog') }}" class="category-card">
+                        <img src="{{ url_for('static', filename='images/gold-black-watch.jpg') }}" alt="Watches">
+                        <div class="category-card__content">
+                            <h3 class="category-card__title">Watches</h3>
+                            <span class="category-card__link">Shop Now →</span>
+                        </div>
+                    </a>
+                    
+                    <a href="{{ url_for('product_catalog') }}" class="category-card">
+                        <img src="{{ url_for('static', filename='images/leather-handbag-brown.jpg') }}" alt="Bags">
+                        <div class="category-card__content">
+                            <h3 class="category-card__title">Bags</h3>
+                            <span class="category-card__link">Shop Now →</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
 
-        <ul>
-            <li>Elegant suits crafted for modern gentlemen</li>
-            <li>High-end watches that define status and precision</li>
-            <li>Designer women’s bags that blend beauty with functionality</li>
-            <li>Stylish shoes made for comfort and class</li>
-            <li>Exclusive fashion pieces curated for refined taste</li>
-        </ul>
+        <section class="aboutUs" id="about">
+            <div class="container">
+                <div class="about_container">
+                    <h2 class="section__title">Our Story</h2>
+                    <p>Welcome to Mackkas, where luxury meets timeless style.</p>
+                    <p>At Mackkas, we believe fashion is more than clothing — it is confidence, identity, and presence. Our store was created for individuals who value quality, sophistication, and distinction.</p>
+                    <div class="hero__cta" style="margin-top: var(--spacing-8); justify-content: center;">
+                        <a href="{{ url_for('product_catalog') }}" class="button button--primary">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-        <p>
-            Every product in our collection is carefully selected to meet high standards of craftsmanship, durability, and style.
-        </p>
-
-        <p class="mission">
-            We are more than a fashion store. <br>
-            <strong>We are a statement of class.</strong>
-        </p>
-    </div>
-</div>
     <script src="{{ url_for('static', filename='js/home-page.js') }}"></script>
- 
 </body>
 </html>

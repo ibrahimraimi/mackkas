@@ -3,46 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login | Mackkas Luxury Fashion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login-page.css') }}">
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 </head>
 <body>
-    <div class="bg_img">
-        <div class="blank"></div>
-        <img class="bg-img" src="{{ url_for('static', filename='images/classic-navy-suit.jpg') }}" alt="">
-        <img class="bg-img2" src="{{ url_for('static', filename='images/pink-gown-alt.webp') }}" alt="">
+    <div class="split-layout">
+        <div class="auth-visual">
+            <img src="{{ url_for('static', filename='images/classic-navy-suit.jpg') }}" alt="Mackkas Style" class="auth-visual__img">
+            <div class="auth-visual__overlay">
+                <div class="auth-visual__content">
+                    <img src="{{ url_for('static', filename='images/mackkas-brand-logo.png') }}" alt="Mackkas" class="auth-logo">
+                    <h2>Elevate Your Wardrobe</h2>
+                    <p>Access your exclusive Mackkas account and continue your journey in luxury fashion.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="auth-form-container">
+            <div class="auth-form-card">
+                <div class="auth-form-header">
+                    <h1>Welcome Back</h1>
+                    <p>Enter your credentials to access your account</p>
+                </div>
+
+                <form id="loginform" class="auth-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <div class="input-wrapper">
+                            <iconify-icon icon="lucide:user"></iconify-icon>
+                            <input type="text" id="username" placeholder="Enter your username" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <iconify-icon icon="lucide:lock"></iconify-icon>
+                            <input type="password" id="password" placeholder="Enter your password" required>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" id="btnform" class="button button--primary button--large w-full">
+                        Sign In
+                    </button>
+
+                    <p class="auth-switch">
+                        Don't have an account? 
+                        <a href="{{ url_for('signup_page') }}">Create one now</a>
+                    </p>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="formbody">   
 
-        <div class="signup">
-            <form action="" id="loginform">
-            <h1 id="header">LOGIN</h1>
-            
-            <input type="text" id="username" placeholder="Username..." required>
-        
-            <br><br>
-             
-            
-            <input type="password" id="password" placeholder="password..." required>
-            <br><br>
-    
-            <button id="btnform" style="background-color: greenyellow;" type="submit">Login</button>
-             
-            <br>
-             <span style="color: azure;">If you don't have an account <a style="color:rgb(159, 17, 17);" href="{{ url_for('signup_page') }}">Sign up</a></span>
-            </form>
-        
-        </div>
-        
-        </div>
-
-        <div class="successful_hide">
+    <!-- Feedbacks -->
+    <div class="toast-container">
+        <div class="successful_hide" id="successToast">
+            <iconify-icon icon="lucide:check-circle"></iconify-icon>
             <h3>Login Successful</h3>
         </div>
-    
-        <h3 class="validate_hide">Credentials Not Found</h3>
-        
-       
-        <script src="{{ url_for('static', filename='js/login-page.js') }}"></script>
+        <div class="validate_hide" id="errorToast">
+            <iconify-icon icon="lucide:alert-circle"></iconify-icon>
+            <h3>Invalid credentials</h3>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/login-page.js') }}"></script>
 </body>
 </html>

@@ -40,7 +40,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/mackkas')
-def mackkas():
+def product_catalog():
     return render_template('product-catalog.html')
 
 @app.route('/login')

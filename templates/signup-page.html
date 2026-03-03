@@ -3,50 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Join Mackkas | Luxury Fashion Registry</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/signup-page.css') }}">
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 </head>
 <body>
-    <div class="bg_img">
-        <div class="blank"></div>
-        <img class="bg-img" src="{{ url_for('static', filename='images/classic-navy-suit.jpg') }}" alt="">
-        <img class="bg-img2" src="{{ url_for('static', filename='images/pink-gown-alt.webp') }}" alt="">
+    <div class="split-layout">
+        <div class="auth-visual">
+            <img src="{{ url_for('static', filename='images/red-wine-gown.png') }}" alt="Mackkas Elegance" class="auth-visual__img">
+            <div class="auth-visual__overlay">
+                <div class="auth-visual__content">
+                    <img src="{{ url_for('static', filename='images/mackkas-brand-logo.png') }}" alt="Mackkas" class="auth-logo">
+                    <h2>Join the Elite</h2>
+                    <p>Become part of the Mackkas community and enjoy exclusive access to our premium collections and personalized styling services.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="auth-form-container">
+            <div class="auth-form-card">
+                <div class="auth-form-header">
+                    <h1>Create Account</h1>
+                    <p>Register to start your luxury fashion journey</p>
+                </div>
+
+                <form id="signupform" class="auth-form">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <div class="input-wrapper">
+                            <iconify-icon icon="lucide:user-plus"></iconify-icon>
+                            <input type="text" id="name" placeholder="Enter your full name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <div class="input-wrapper">
+                            <iconify-icon icon="lucide:at-sign"></iconify-icon>
+                            <input type="text" id="username" placeholder="Choose a username" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <iconify-icon icon="lucide:lock"></iconify-icon>
+                            <input type="password" id="password" placeholder="Create a strong password" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password</label>
+                        <div class="input-wrapper">
+                            <iconify-icon icon="lucide:shield-check"></iconify-icon>
+                            <input type="password" id="confirm-password" placeholder="Repeat your password" required>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" required>
+                            <span class="checkmark"></span>
+                            I agree to the <a href="#">Terms & Conditions</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" id="signup_btn" class="button button--primary button--large w-full">
+                        Create Account
+                    </button>
+
+                    <p class="auth-switch">
+                        Already have an account? 
+                        <a href="{{ url_for('login_page') }}">Sign in instead</a>
+                    </p>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="formbody">   
 
-    <div class="signup">
-        <form action="" id="form">
-        <span id="header">Create Account</span><br>
-       
-        <input maxlength="10" type="text" id="username" placeholder="Username..." required>
-        <span class="hide"><br>Username must contain letters</span>
-        <br><br>
-         
-        
-        <input type="email" id="email" placeholder="email..." required>
-        <span class="email_hide"><br>Invalid Email</span>
-        <br><br>
-
-        <input maxlength="16" type="password" id="password" placeholder="password..." required>
-        <span class="password_hide"><br>Password MUST contain at least 6 chacters</span>
-        <br><br>
-
-        <button id="btnform" style="background-color: greenyellow;" type="submit">Signup</button>
-         
-        <br>
-         <span style="color: azure;">If already have account <a style="color:rgb(159, 17, 17)" href="{{ url_for('login_page') }}">Login</a></span>
-        </form>
-    
+    <!-- Feedbacks -->
+    <div class="toast-container">
+        <div class="successful_hide" id="successToast">
+            <iconify-icon icon="lucide:check-circle"></iconify-icon>
+            <h3>Account created!</h3>
+        </div>
+        <div class="validate_hide" id="errorToast">
+            <iconify-icon icon="lucide:alert-circle"></iconify-icon>
+            <h3 id="errMsg">Something went wrong</h3>
+        </div>
     </div>
-    
-    </div>
-
-    <div class="successful_hide">
-        <h3>Account Successfully Created</h3>
-    </div>
-
-    <h3 class="validate_hide">Please Validate Your Form</h3>
-    
 
     <script src="{{ url_for('static', filename='js/signup-page.js') }}"></script>
 </body>

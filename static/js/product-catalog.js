@@ -1,40 +1,48 @@
-let Product_Container = document.querySelector(".product");
-let Cart = document.querySelector(".close_cart");
-let Close_Cart = document.getElementById("close");
-let Open_Cart = document.querySelector(".cart_icon");
-let Cart_Items = [];
-let List_Cart = document.querySelector(".list_cart");
-let List_Number= document.querySelector(".number");
-let Overall = document.querySelector(".total")
-let Purchase = document.querySelector(".success_hide")
-let Pending = document.querySelector(".pending_hide")
-const Slide_value = document.querySelector(".slide-value");
+/* Mackkas Luxury Product Catalog Logic */
+
+// DOM Elements
+const Product_Container = document.querySelector(".product");
+const Cart_Drawer = document.getElementById("cartDrawer");
+const Cart_Overlay = document.getElementById("cartOverlay");
+const Close_Cart_Btn = document.getElementById("close");
+const Open_Cart_Btn = document.querySelector(".nav__cart");
+const List_Cart = document.querySelector(".list_cart");
+const List_Numbers = document.querySelectorAll(".number");
+const Subtotal_Displays = document.querySelectorAll(".total");
+const Category_Sidebar = document.getElementById("categorySidebar");
+const Category_Blocker = document.getElementById("categoryBlocker");
+const Category_Open_Btn = document.getElementById("categoryBtn");
+const Category_Close_Btn = document.querySelector(".category__close");
 const Slider = document.getElementById("range");
-let Item_Search = document.querySelector(".search_input")
-let Button_Icon = document.querySelector(".btn_icon")
-let not_in_cart = document.querySelector(".not-in-cart");
-let category_Button = document.getElementById("categoryBtn")
-let Category_Menu = document.querySelector(".category")
-let category_opacity = document.querySelector(".category_blocker_hide")
-let cart_opacity = document.querySelector(".cart_blocker_hide")
-let None_In_Cart = document.querySelector(".nothing-in-cart_hide")
-let Items = []; // Fetched from API
+const Slide_Value_Display = document.querySelector(".slide-value");
+const Item_Search_Input = document.querySelector(".search_input");
 
-// Get logged-in user
-let CurrentUser = sessionStorage.getItem("currentUser");
+// State
+let Cart_Items = [];
+let All_Products = [];
 
-if(CurrentUser){
-  let ParsedUser = JSON.parse(CurrentUser);
-  let NameDisplay = document.querySelector(".name_user");
-  if(NameDisplay) NameDisplay.textContent = ParsedUser.Name;
+// Get logged-in user info
+const CurrentUser = sessionStorage.getItem("currentUser");
+if (CurrentUser) {
+    const ParsedUser = JSON.parse(CurrentUser);
+    const NameDisplay = document.querySelector(".name_user");
+    if (NameDisplay) NameDisplay.textContent = ParsedUser.Name;
+}
+
+/**
+ * Fetch initial data
+ */
+async function Initialize() {
+    await FetchProducts();
+    await FetchCart();
+    SetupEventListeners();
 }
 
 async function FetchProducts() {
     try {
         const response = await fetch('/api/products');
-        Items = await response.json();
-        GenerateItems(Items);
-        await FetchCart();
+        All_Products = await response.json();
+        GenerateItems(All_Products);
     } catch (error) {
         console.error("Error fetching products:", error);
     }
@@ -62,186 +70,225 @@ async function SyncCart() {
     }
 }
 
+/**
+ * UI Rendering
+ */
 function GenerateItems(items_to_render) {
     Product_Container.innerHTML = "";
-    items_to_render.forEach((item, i) => {
-        let isAdded = Cart_Items.some(cart_item => cart_item.id === item.id);
-        let buttonText = isAdded ? "Added To Cart" : "Add to Cart";
-        let buttonStyle = isAdded ? "background-color: #5a2823; font-size: 12px;" : "background-color: #e74c3c;";
-
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'item';
-        itemDiv.innerHTML = `
-            <div class="product-images">
-              <img src="${item.img1}" alt="${item.name}">
-              <img id="Suit2" src="${item.img2 || item.img1}" alt="${item.name}">
-            </div>
-            <div class="texts">
-              <div class="pb">
-                <h4 class="product-name">${item.name}</h4>
-                <h3 class="product-price">${item.price}</h3>
-              </div>
-              <div class="description">
-                <span class="product-description">${item.desc}</span> 
-                <div class="star-rating">
-                    ${[1, 2, 3, 4, 5].map(star => `
-                        <div class="star-rate-${star}">
-                            <input type="radio" name="star${i + 1}" id="star${i + 1}-${star}">
-                            <label for="star${i + 1}-${star}"><iconify-icon class="star${i + 1}" icon="material-symbols:star"></iconify-icon></label>
-                        </div>
-                    `).join('')}
-                </div>
-              </div>
-            </div>
-            <button id="prod-btn-${item.id}" class="add_to_cart" style="${buttonStyle}">${buttonText}</button>
-        `;
-        
-        itemDiv.querySelector('.add_to_cart').onclick = () => AddToCart(item.id);
-        Product_Container.appendChild(itemDiv);
-    });
-    SetupStars();
-}
-
-function SetupStars() {
-    for (let i = 1; i <= Items.length; i++) {
-        const randomIndex = Math.floor(Math.random() * 5) + 1;
-        const Stars = document.querySelectorAll(`.star${i}`)
-        Stars.forEach((star, index) => {
-            star.style.color = index >= randomIndex ? "white" : "gold";
-        });
-    }
-}
-
-async function AddToCart(id) {
-    let item = Items.find(item => item.id === id);
-    let button = document.getElementById(`prod-btn-${id}`);
-
-    if (Cart_Items.some(cart_item => cart_item.id === id)) {
-        not_in_cart.className = "already-in-cart";
-        setTimeout(() => not_in_cart.className = "not-in-cart", 3000);
+    
+    if (items_to_render.length === 0) {
+        Product_Container.innerHTML = `<div class="no-results">No products found matching your criteria.</div>`;
         return;
     }
 
-    Cart_Items.push({...item});
-    button.textContent = "Added To Cart";
-    button.style.backgroundColor = "#5a2823";
-    button.style.fontSize = "12px";
-    
-    UpdateCartUI();
-    await SyncCart();
+    items_to_render.forEach((item) => {
+        const isAdded = Cart_Items.some(cart_item => cart_item.id === item.id);
+        const buttonText = isAdded ? "In Cart" : "Add to Cart";
+        const buttonClass = isAdded ? "button button--outline" : "button button--primary";
+
+        const productCard = document.createElement('article');
+        productCard.className = 'product-card';
+        productCard.innerHTML = `
+            <div class="product-card__image">
+                <img src="${item.img1}" alt="${item.name}" class="product-card__img product-card__img--primary">
+                <img src="${item.img2 || item.img1}" alt="${item.name}" class="product-card__img product-card__img--hover">
+                ${item.Price > 500 ? '<span class="product-card__badge">Premium</span>' : ''}
+            </div>
+            <div class="product-card__content">
+                <span class="product-card__category">${item.category || 'Luxury'}</span>
+                <h3 class="product-card__title">${item.name}</h3>
+                <div class="product-card__price">$${item.Price}</div>
+                <button id="prod-btn-${item.id}" class="product-card__add-to-cart ${buttonClass}" onclick="AddToCart(${item.id})">
+                    <iconify-icon icon="lucide:shopping-bag"></iconify-icon>
+                    ${buttonText}
+                </button>
+            </div>
+        `;
+        Product_Container.appendChild(productCard);
+    });
 }
 
-function UpdateCartUI() {
-    List_Number.textContent = Cart_Items.reduce((acc, curr) => acc + curr.qty, 0);
-    List_Cart.innerHTML = Cart_Items.map(item => `
-        <div class="cart_item">
-            <div class="cartitem_image"><img src="${item.img1}" alt="${item.name}"></div>
-            <div class="cartitem_name"><h3>${item.name}</h3></div>
-            <div class="cartitem_price"><p>${item.price}</p></div>
-            <div class="cartitem_quantity">
-                <span class="minus" onclick="UpdateQuantity('${item.id}', -1)">-</span>
-                <span class="digit">${item.qty}</span>
-                <span class="plus" onclick="UpdateQuantity('${item.id}', 1)">+</span>
+async function UpdateCartUI() {
+    // Update number badges
+    const totalQty = Cart_Items.reduce((acc, curr) => acc + curr.qty, 0);
+    List_Numbers.forEach(el => el.textContent = totalQty);
+
+    // Render cart items
+    if (Cart_Items.length === 0) {
+        List_Cart.innerHTML = `<div class="cart-empty-msg">Your cart is currently empty.</div>`;
+    } else {
+        List_Cart.innerHTML = Cart_Items.map(item => `
+            <div class="cart-item">
+                <img src="${item.img1}" alt="${item.name}" class="cart-item__image">
+                <div class="cart-item__details">
+                    <h3 class="cart-item__title">${item.name}</h3>
+                    <p class="cart-item__variant">Unit Price: $${item.Price}</p>
+                    <div class="cart-item__quantity">
+                        <button class="quantity-btn" onclick="UpdateQuantity(${item.id}, -1)">-</button>
+                        <span class="digit">${item.qty}</span>
+                        <button class="quantity-btn" onclick="UpdateQuantity(${item.id}, 1)">+</button>
+                    </div>
+                </div>
+                <div class="cart-item__price-total">$${item.Price * item.qty}</div>
             </div>
-        </div>
-    `).join("");
+        `).join("");
+    }
     
-    let grandTotal = Cart_Items.reduce((acc, curr) => acc + curr.Price * curr.qty, 0);
-    Overall.innerHTML = `<span style="color: white">Total Price: </span>$${grandTotal}`;
+    // Update total price displays
+    const grandTotal = Cart_Items.reduce((acc, curr) => acc + curr.Price * curr.qty, 0);
+    Subtotal_Displays.forEach(el => el.textContent = `$${grandTotal}`);
+}
+
+/**
+ * Cart Operations
+ */
+async function AddToCart(id) {
+    const item = All_Products.find(p => p.id === id);
+    if (!item) return;
+
+    if (Cart_Items.some(cart_item => cart_item.id === id)) {
+        ShowToast("alreadyToast");
+        return;
+    }
+
+    Cart_Items.push({...item, qty: 1});
+    UpdateCartUI();
+    GenerateItems(All_Products); // Refresh main grid buttons
+    await SyncCart();
+    OpenCart();
 }
 
 async function UpdateQuantity(id, change) {
-    let item = Cart_Items.find(item => item.id === id);
+    const item = Cart_Items.find(item => item.id === id);
     if (!item) return;
 
     item.qty += change;
     if (item.qty < 1) {
         Cart_Items = Cart_Items.filter(item => item.id !== id);
-        let button = document.getElementById(`prod-btn-${id}`);
-        if (button) {
-            button.textContent = "Add to Cart";
-            button.style.backgroundColor = "#e74c3c";
-            button.style.fontSize = "";
-        }
     }
     
     UpdateCartUI();
+    GenerateItems(All_Products); // Refresh main grid buttons
     await SyncCart();
 }
 
-Close_Cart.addEventListener("click", () => {
-    Cart.className = "close_cart";
-    cart_opacity.className = "cart_blocker_hide";
-});
-
-Open_Cart.addEventListener("click", () => {
-    Cart.className = "cart";
-    cart_opacity.className = "cart_blocker";
-});
-
 async function Buy() {
     if (Cart_Items.length === 0) {
-        None_In_Cart.className = "nothing-in-cart";
-        setTimeout(() => None_In_Cart.className = "nothing-in-cart_hide", 2000);
+        ShowToast("nothingToast");
         return;
     }
 
-    Pending.className = "pending";
+    ShowToast("pendingToast");
     setTimeout(async () => {
-        Pending.className = "pending_hide";
-        Purchase.className = "success";
+        HideToast("pendingToast");
+        ShowToast("successToast");
         
         Cart_Items = [];
         await SyncCart();
         UpdateCartUI();
-        GenerateItems(Items); // Reset buttons
-
-        setTimeout(() => Purchase.className = "success_hide", 2000);
-    }, 2000);
+        GenerateItems(All_Products);
+        
+        setTimeout(() => {
+            HideToast("successToast");
+            CloseCart();
+        }, 2000);
+    }, 1500);
 }
 
-Slider.oninput = () => {
-    let Value = Slider.value;
-    Slide_value.textContent = "$" + Value;
-    Slide_value.style.left = (Value / 20) + "%";
-    Slide_value.classList.add("show");
-};
+/**
+ * UI Controls
+ */
+function OpenCart() {
+    Cart_Drawer.classList.add("open");
+    Cart_Drawer.classList.remove("close_cart");
+    Cart_Overlay.classList.add("cart_blocker_show");
+}
 
-Slider.onblur = () => Slide_value.classList.remove("show");
+function CloseCart() {
+    Cart_Drawer.classList.remove("open");
+    Cart_Drawer.classList.add("close_cart");
+    Cart_Overlay.classList.remove("cart_blocker_show");
+}
 
-Item_Search.addEventListener("keyup", () => {
-    let filtered = Items.filter(item => item.name.toLowerCase().includes(Item_Search.value.toLowerCase()));
-    GenerateItems(filtered);
-});
+function OpenCategories() {
+    Category_Sidebar.classList.add("open");
+    Category_Blocker.classList.add("category_blocker_show");
+}
 
-Slider.addEventListener("mouseup", () => {
-    let filtered = Items.filter(item => item.Price <= Slider.value);
-    GenerateItems(filtered);
-});
+function CloseCategories() {
+    Category_Sidebar.classList.remove("open");
+    Category_Blocker.classList.remove("category_blocker_show");
+}
 
+/**
+ * Filtering
+ */
 function filter(selectedFilter) {
-    let filtered = Items;
-    if (selectedFilter === 'Men') filtered = Items.filter(i => i.category === 'men');
-    else if (selectedFilter === 'Women') filtered = Items.filter(i => i.category === 'women');
-    else if (selectedFilter === 'Suits') filtered = Items.filter(i => i.cloth === 'suit');
-    else if (selectedFilter === 'Gown') filtered = Items.filter(i => i.cloth === 'gown');
-    else if (selectedFilter === 'Watches') filtered = Items.filter(i => i.cloth === 'watch');
-    else if (selectedFilter === 'Bags') filtered = Items.filter(i => i.cloth === 'bag');
+    let filtered = All_Products;
+    if (selectedFilter !== 'All') {
+        const search = selectedFilter.toLowerCase();
+        filtered = All_Products.filter(i => 
+            (i.category && i.category.toLowerCase() === search) || 
+            (i.cloth && i.cloth.toLowerCase() === search)
+        );
+    }
     
+    // Update active state in UI
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `${selectedFilter}Filter`);
+    });
+
     GenerateItems(filtered);
+    CloseCategories();
 }
 
-category_Button.addEventListener("click", () => {
-    Category_Menu.className = "category_bringback";
-    category_opacity.className = "category_blocker";
-});
+/**
+ * Toasts
+ */
+function ShowToast(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.add("success", "pending", "not-in-cart", "nothing-in-cart");
+}
 
-document.addEventListener("click", (e) => {
-    let Category_M = document.querySelector(".category_bringback");
-    if (Category_M && e.target !== category_Button && !category_Button.contains(e.target) && !Category_M.contains(e.target)) {
-        Category_M.className = "category";
-        category_opacity.className = "category_blocker_hide";
-    }
-});
+function HideToast(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove("success", "pending", "not-in-cart", "nothing-in-cart");
+}
 
-FetchProducts();
+/**
+ * Event Listeners
+ */
+function SetupEventListeners() {
+    Open_Cart_Btn.addEventListener("click", OpenCart);
+    Close_Cart_Btn.addEventListener("click", CloseCart);
+    Cart_Overlay.addEventListener("click", CloseCart);
+
+    Category_Open_Btn.addEventListener("click", OpenCategories);
+    Category_Close_Btn.addEventListener("click", CloseCategories);
+    Category_Blocker.addEventListener("click", CloseCategories);
+
+    Slider.oninput = () => {
+        const val = Slider.value;
+        Slide_Value_Display.textContent = "$" + val;
+        Slide_Value_Display.classList.add("show");
+    };
+
+    Slider.onblur = () => Slide_Value_Display.classList.remove("show");
+
+    Slider.addEventListener("mouseup", () => {
+        const filtered = All_Products.filter(item => item.Price <= Slider.value);
+        GenerateItems(filtered);
+    });
+
+    Item_Search_Input.addEventListener("keyup", () => {
+        const query = Item_Search_Input.value.toLowerCase();
+        const filtered = All_Products.filter(item => 
+            item.name.toLowerCase().includes(query) || 
+            (item.desc && item.desc.toLowerCase().includes(query))
+        );
+        GenerateItems(filtered);
+    });
+}
+
+// Initalize on load
+Initialize();
