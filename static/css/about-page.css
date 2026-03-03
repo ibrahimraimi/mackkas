@@ -1,0 +1,96 @@
+/* About Page Styles - Minimalist (LINEA Style) */
+
+.about {
+  padding: var(--spacing-24) 0;
+}
+
+.about__hero {
+  text-align: center;
+  margin-bottom: var(--spacing-24);
+}
+
+.about__eyebrow {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--color-neutral-400);
+  margin-bottom: var(--spacing-4);
+  display: block;
+}
+
+.about__title {
+  font-family: var(--font-serif);
+  font-size: var(--text-4xl);
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.2;
+}
+
+.about__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-16);
+  align-items: center;
+  margin-bottom: var(--spacing-24);
+}
+
+.about__image-wrapper {
+  overflow: hidden;
+}
+
+.about__image {
+  width: 100%;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  background-color: var(--color-neutral-50);
+}
+
+.about__content {
+  padding: var(--spacing-8);
+}
+
+.about__subtitle {
+  font-family: var(--font-serif);
+  font-size: var(--text-2xl);
+  margin-bottom: var(--spacing-6);
+}
+
+.about__text {
+  font-size: var(--text-base);
+  color: var(--color-neutral-600);
+  line-height: 1.8;
+  margin-bottom: var(--spacing-8);
+}
+
+.about__values {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-8);
+  margin-top: var(--spacing-24);
+  padding-top: var(--spacing-16);
+  border-top: 1px solid var(--color-neutral-100);
+}
+
+.value-item h4 {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  margin-bottom: var(--spacing-4);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.value-item p {
+  font-size: var(--text-sm);
+  color: var(--color-neutral-500);
+}
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+  .about__grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-8);
+  }
+  .about__values {
+    grid-template-columns: 1fr;
+  }
+}

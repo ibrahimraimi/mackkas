@@ -1,0 +1,128 @@
+.profile {
+  padding: var(--spacing-16) 0;
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+.profile__header {
+  margin-bottom: var(--spacing-16);
+  text-align: center;
+}
+
+.profile__title {
+  font-family: var(--font-serif);
+  font-size: var(--text-4xl);
+  margin-bottom: var(--spacing-2);
+}
+
+.profile__subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-neutral-400);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.profile__grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: var(--spacing-12);
+}
+
+/* Profile Sidebar */
+.profile__nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.profile__nav-link {
+  padding: var(--spacing-4);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid var(--color-neutral-100);
+  transition: all var(--transition-base);
+}
+
+.profile__nav-link.active {
+  background-color: var(--color-neutral-50);
+  border-left: 2px solid var(--color-black);
+}
+
+.profile__nav-link:hover {
+  background-color: var(--color-neutral-50);
+}
+
+/* Profile Content */
+.profile__main {
+  background: var(--color-white);
+  padding: var(--spacing-8);
+}
+
+.profile__section-title {
+  font-family: var(--font-serif);
+  font-size: var(--text-2xl);
+  margin-bottom: var(--spacing-8);
+  padding-bottom: var(--spacing-4);
+  border-bottom: 1px solid var(--color-neutral-100);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-8) var(--spacing-4);
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.info-item__label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-neutral-400);
+}
+
+.info-item__value {
+  font-size: var(--text-base);
+  color: var(--color-black);
+}
+
+/* Order History */
+.order-card {
+  border: 1px solid var(--color-neutral-100);
+  padding: var(--spacing-6);
+  margin-bottom: var(--spacing-4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-card__info h4 {
+  font-size: var(--text-sm);
+  margin-bottom: 4px;
+}
+
+.order-card__date {
+  font-size: var(--text-xs);
+  color: var(--color-neutral-500);
+}
+
+.order-card__status {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 4px 12px;
+  background: var(--color-neutral-50);
+  border-radius: 99px;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .profile__grid {
+    grid-template-columns: 1fr;
+  }
+}

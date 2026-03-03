@@ -51,6 +51,24 @@ def login_page():
 def signup_page():
     return render_template('signup-page.html')
 
+@app.route('/product/<int:product_id>')
+def product_detail(product_id):
+    return render_template('product-detail.html', product_id=product_id)
+
+@app.route('/profile')
+def profile_page():
+    if 'user_id' not in session:
+        return redirect(url_for('login_page'))
+    return render_template('profile-page.html')
+
+@app.route('/search')
+def search_page():
+    return render_template('search-page.html')
+
+@app.route('/about')
+def about_page():
+    return render_template('about-page.html')
+
 @app.route('/api/auth/signup', methods=['POST'])
 def signup():
     data = request.json
@@ -78,6 +96,16 @@ def logout():
     session.clear()
     return redirect(url_for('login_page'))
 
+@app.route('/api/user/profile', methods=['GET'])
+def get_user_profile():
+    if 'user_id' not in session:
+        return jsonify({'message': 'Unauthorized'}), 401
+    user = User.query.get(session['user_id'])
+    return jsonify({
+        'username': user.username,
+        'email': user.email
+    })
+
 @app.route('/api/products', methods=['GET'])
 def get_products():
     products = Product.query.all()
@@ -94,6 +122,23 @@ def get_products():
         'buy': 'Add to Cart',
         'qty': 1
     } for p in products])
+
+@app.route('/api/products/<int:id>', methods=['GET'])
+def get_product(id):
+    p = Product.query.get_or_404(id)
+    return jsonify({
+        'id': p.id,
+        'name': p.name,
+        'desc': p.description,
+        'Price': p.price,
+        'price': f'${p.price}',
+        'category': p.category,
+        'cloth': p.cloth_type,
+        'img1': f'/static/images/{p.img1.split("/")[-1]}',
+        'img2': f'/static/images/{p.img2.split("/")[-1]}' if p.img2 else '',
+        'buy': 'Add to Cart',
+        'qty': 1
+    })
 
 @app.route('/api/cart', methods=['GET'])
 def get_cart():

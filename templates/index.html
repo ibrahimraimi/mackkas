@@ -15,7 +15,7 @@
                 <ul class="nav__menu">
                     <li><a href="{{ url_for('product_catalog') }}" class="nav__link">Shop</a></li>
                     <li><a href="{{ url_for('product_catalog') }}" class="nav__link">New in</a></li>
-                    <li><a href="#about" class="nav__link">About</a></li>
+                    <li><a href="{{ url_for('about_page') }}" class="nav__link">About</a></li>
                 </ul>
 
                 <a href="/" class="nav__logo">
@@ -23,10 +23,10 @@
                 </a>
 
                 <div class="nav__actions">
-                    <button class="nav__icon" aria-label="Search">
+                    <a href="{{ url_for('search_page') }}" class="nav__icon" aria-label="Search">
                         <iconify-icon icon="lucide:search"></iconify-icon>
-                    </button>
-                    <a href="{{ url_for('login_page') }}" class="nav__icon" aria-label="Account">
+                    </a>
+                    <a href="{{ url_for('profile_page') }}" class="nav__icon" aria-label="Account">
                         <iconify-icon icon="lucide:user"></iconify-icon>
                     </a>
                     <button class="nav__icon nav__cart" aria-label="Cart" onclick="window.location.href='{{ url_for('product_catalog') }}';">

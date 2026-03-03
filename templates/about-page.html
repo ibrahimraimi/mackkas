@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mackkas | Shop Our Collection</title>
+    <title>Mackkas | Our Story</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/product-catalog.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/about-page.css') }}">
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 </head>
 <body>
@@ -15,7 +15,7 @@
                 <ul class="nav__menu">
                     <li><a href="{{ url_for('product_catalog') }}" class="nav_link">Shop</a></li>
                     <li><a href="{{ url_for('product_catalog') }}" class="nav_link">New in</a></li>
-                    <li><a href="{{ url_for('about_page') }}" class="nav_link">About</a></li>
+                    <li><a href="{{ url_for('about_page') }}" class="nav_link active">About</a></li>
                 </ul>
 
                 <a href="/" class="nav__logo">Mackkas</a>
@@ -27,9 +27,8 @@
                     <a href="{{ url_for('profile_page') }}" class="nav__icon" aria-label="Account">
                         <iconify-icon icon="lucide:user"></iconify-icon>
                     </a>
-                    <button class="nav__icon nav__cart" id="openCartBtn" aria-label="Cart">
+                    <button class="nav__icon nav__cart" aria-label="Cart" onclick="window.location.href='{{ url_for('product_catalog') }}';">
                         <iconify-icon icon="lucide:shopping-bag"></iconify-icon>
-                        <span class="badge" id="cartCountBadge">0</span>
                     </button>
                 </div>
             </nav>
@@ -37,65 +36,49 @@
     </header>
 
     <main class="container">
-        <!-- Catalog Header -->
-        <div class="catalog-header">
-            <div class="catalog-header__container">
-                <h1 class="catalog-header__title" id="currentCategoryTitle">All Collection</h1>
-                <span class="catalog-header__count" id="productCountText">26 Items</span>
+        <section class="about">
+            <div class="about__hero">
+                <span class="about__eyebrow">Our Story</span>
+                <h1 class="about__title">Crafting timeless elegance for the modern individual.</h1>
             </div>
-        </div>
 
-        <!-- Products Toolbar -->
-        <div class="products__toolbar">
-            <div class="toolbar__filters">
-                <button class="filter-btn" onclick="ToggleFilterMenu()">
-                    Filter <iconify-icon icon="lucide:chevron-down"></iconify-icon>
-                </button>
-                <div class="toolbar__category-pills" id="categoryPillList">
-                    <!-- Categories will be rendered here -->
+            <div class="about__grid">
+                <div class="about__image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&q=80&w=2070" alt="Atelier" class="about__image">
+                </div>
+                <div class="about__content">
+                    <h2 class="about__subtitle">The Atelier</h2>
+                    <p class="about__text">Founded in 2026, Mackkas represents a commitment to unparalleled craftsmanship and minimalist design. We believe that true luxury lies in the details—the choice of fabric, the precision of a stitch, and the timelessness of a silhouette.</p>
+                    <p class="about__text">Our pieces are designed in our London atelier and crafted by skilled artisans using the world's finest sustainable materials.</p>
                 </div>
             </div>
-            
-            <div class="toolbar__sort">
-                <select id="sortSelect" onchange="HandleSort(this.value)" class="filter-btn" style="border:none; background:none; text-transform: uppercase;">
-                    <option value="featured">Sort by: Featured</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                </select>
-            </div>
-        </div>
 
-        <!-- Product Grid -->
-        <div class="products__grid" id="productGrid">
-            <!-- Products will be dynamically rendered here -->
-        </div>
+            <div class="about__grid" style="direction: rtl;">
+                <div class="about__image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=2070" alt="Garment" class="about__image">
+                </div>
+                <div class="about__content" style="direction: ltr;">
+                    <h2 class="about__subtitle">Our Philosophy</h2>
+                    <p class="about__text">We reject the fast-fashion cycle in favor of longevity. A Mackkas piece is not just for a season; it is designed to be cherished for a lifetime, evolving with the wearer and maintaining its quiet confidence through years of use.</p>
+                </div>
+            </div>
+
+            <div class="about__values">
+                <div class="value-item">
+                    <h4>Quality</h4>
+                    <p>Uncompromising standards in every thread and fold.</p>
+                </div>
+                <div class="value-item">
+                    <h4>Sincerity</h4>
+                    <p>Honest materials and transparent production processes.</p>
+                </div>
+                <div class="value-item">
+                    <h4>Timelessness</h4>
+                    <p>Design that transcends trends and maintains relevance.</p>
+                </div>
+            </div>
+        </section>
     </main>
-
-    <!-- Cart Drawer -->
-    <div class="cart_blocker_hide" id="cartOverlay"></div>
-    <aside class="cart-drawer close_cart" id="cartDrawer">
-        <div class="cart-drawer__header">
-            <h2 class="cart-drawer__title">Shopping Bag</h2>
-            <button class="close-cart-btn" id="closeCartBtn">
-                <iconify-icon icon="lucide:x"></iconify-icon>
-            </button>
-        </div>
-
-        <div class="cart-items" id="cartItemsContainer">
-            <!-- Cart items will be rendered here -->
-        </div>
-
-        <div class="cart-drawer__footer">
-            <div class="cart-summary__row">
-                <span>Subtotal</span>
-                <span id="cartSubtotal">$0.00</span>
-            </div>
-            <p style="font-size: 10px; color: var(--color-neutral-500); margin-bottom: 20px;">Shipping and taxes calculated at checkout</p>
-            
-            <button class="button button--primary w-full" style="margin-bottom: 15px;">Proceed to Checkout</button>
-            <button class="button button--outline w-full" id="continueShoppingBtn">Continue Shopping</button>
-        </div>
-    </aside>
 
     <footer class="footer">
         <div class="container">
@@ -138,7 +121,5 @@
             </div>
         </div>
     </footer>
-
-    <script src="{{ url_for('static', filename='js/product-catalog.js') }}"></script>
 </body>
 </html>

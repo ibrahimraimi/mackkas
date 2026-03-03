@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mackkas | Shop Our Collection</title>
+    <title>Mackkas | Product Details</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/product-detail.css') }}">
+    <!-- We also need the catalog CSS for the cart drawer styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/product-catalog.css') }}">
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 </head>
@@ -37,41 +39,21 @@
     </header>
 
     <main class="container">
-        <!-- Catalog Header -->
-        <div class="catalog-header">
-            <div class="catalog-header__container">
-                <h1 class="catalog-header__title" id="currentCategoryTitle">All Collection</h1>
-                <span class="catalog-header__count" id="productCountText">26 Items</span>
-            </div>
+        <div id="productDetailContainer">
+            <!-- Product details will be dynamically loaded here -->
+            <div style="padding: 100px 0; text-align: center;">Loading product details...</div>
         </div>
 
-        <!-- Products Toolbar -->
-        <div class="products__toolbar">
-            <div class="toolbar__filters">
-                <button class="filter-btn" onclick="ToggleFilterMenu()">
-                    Filter <iconify-icon icon="lucide:chevron-down"></iconify-icon>
-                </button>
-                <div class="toolbar__category-pills" id="categoryPillList">
-                    <!-- Categories will be rendered here -->
-                </div>
+        <!-- Related Products Section -->
+        <section class="related-products">
+            <h2 class="related-products__title">You May Also Like</h2>
+            <div class="products__grid" id="relatedProductsGrid">
+                <!-- Related products will be loaded here -->
             </div>
-            
-            <div class="toolbar__sort">
-                <select id="sortSelect" onchange="HandleSort(this.value)" class="filter-btn" style="border:none; background:none; text-transform: uppercase;">
-                    <option value="featured">Sort by: Featured</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Product Grid -->
-        <div class="products__grid" id="productGrid">
-            <!-- Products will be dynamically rendered here -->
-        </div>
+        </section>
     </main>
 
-    <!-- Cart Drawer -->
+    <!-- Cart Drawer (Common) -->
     <div class="cart_blocker_hide" id="cartOverlay"></div>
     <aside class="cart-drawer close_cart" id="cartDrawer">
         <div class="cart-drawer__header">
@@ -80,18 +62,12 @@
                 <iconify-icon icon="lucide:x"></iconify-icon>
             </button>
         </div>
-
-        <div class="cart-items" id="cartItemsContainer">
-            <!-- Cart items will be rendered here -->
-        </div>
-
+        <div class="cart-items" id="cartItemsContainer"></div>
         <div class="cart-drawer__footer">
             <div class="cart-summary__row">
                 <span>Subtotal</span>
                 <span id="cartSubtotal">$0.00</span>
             </div>
-            <p style="font-size: 10px; color: var(--color-neutral-500); margin-bottom: 20px;">Shipping and taxes calculated at checkout</p>
-            
             <button class="button button--primary w-full" style="margin-bottom: 15px;">Proceed to Checkout</button>
             <button class="button button--outline w-full" id="continueShoppingBtn">Continue Shopping</button>
         </div>
@@ -139,6 +115,10 @@
         </div>
     </footer>
 
-    <script src="{{ url_for('static', filename='js/product-catalog.js') }}"></script>
+    <!-- Pass the product ID from Flask to JS -->
+    <script>
+        const CURRENT_PRODUCT_ID = {{ product_id }};
+    </script>
+    <script src="{{ url_for('static', filename='js/product-detail.js') }}"></script>
 </body>
 </html>
