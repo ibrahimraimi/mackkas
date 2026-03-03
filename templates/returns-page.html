@@ -3,47 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mackkas | Search</title>
+    <title>Mackkas | Returns & Exchanges</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/product-catalog.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/legal-pages.css') }}">
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon/favicon.ico') }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='images/favicon/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='images/favicon/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ url_for('static', filename='images/favicon/site.webmanifest') }}">
-    <style>
-        .search-header {
-            padding: var(--spacing-24) 0 var(--spacing-12);
-            text-align: center;
-        }
-        .search-input-wrapper {
-            max-width: 600px;
-            margin: 0 auto var(--spacing-12);
-            position: relative;
-            border-bottom: 2px solid var(--color-black);
-        }
-        .search-input {
-            width: 100%;
-            padding: 16px 0;
-            border: none;
-            background: transparent;
-            font-family: var(--font-serif);
-            font-size: var(--text-3xl);
-            outline: none;
-            text-align: center;
-        }
-        .search-input::placeholder {
-            color: var(--color-neutral-200);
-        }
-        .search-stats {
-            font-size: var(--text-xs);
-            color: var(--color-neutral-500);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: var(--spacing-16);
-        }
-    </style>
 </head>
 <body>
     <header class="header">
@@ -54,32 +18,49 @@
                     <li><a href="{{ url_for('product_catalog') }}" class="nav_link">New in</a></li>
                     <li><a href="{{ url_for('about_page') }}" class="nav_link">About</a></li>
                 </ul>
-
                 <a href="/" class="nav__logo">Mackkas</a>
-
                 <div class="nav__actions">
-                    <a href="{{ url_for('login_page') }}" class="nav__icon" aria-label="Account">
-                        <iconify-icon icon="lucide:user"></iconify-icon>
-                    </a>
-                    <button class="nav__icon" aria-label="Cart" onclick="window.location.href='{{ url_for('product_catalog') }}';">
-                        <iconify-icon icon="lucide:shopping-bag"></iconify-icon>
-                    </button>
+                    <a href="{{ url_for('search_page') }}" class="nav__icon"><iconify-icon icon="lucide:search"></iconify-icon></a>
+                    <a href="{{ url_for('profile_page') }}" class="nav__icon"><iconify-icon icon="lucide:user"></iconify-icon></a>
                 </div>
             </nav>
         </div>
     </header>
 
     <main class="container">
-        <div class="search-header">
-            <div class="search-input-wrapper">
-                <input type="text" id="searchInput" class="search-input" placeholder="What are you looking for?" autofocus>
-            </div>
-            <div class="search-stats" id="searchStats">Type to start searching</div>
-        </div>
+        <article class="legal">
+            <header class="legal__header">
+                <span class="legal__eyebrow">Service</span>
+                <h1 class="legal__title">Returns & Exchanges</h1>
+            </header>
+            
+            <div class="legal__content">
+                <section>
+                    <h2>Our Policy</h2>
+                    <p>We want you to be completely satisfied with your purchase. If for any reason you are not, we accept returns within 14 days of the delivery date, provided the items are in their original condition with all tags attached.</p>
+                </section>
 
-        <div class="products__grid" id="searchResultsGrid">
-            <!-- Search results will appear here -->
-        </div>
+                <section>
+                    <h2>Return Process</h2>
+                    <p>To initiate a return, please follow these steps:</p>
+                    <ul>
+                        <li>Visit our Contact page or email concierge@mackkas.com with your order number.</li>
+                        <li>Our team will provide you with a return authorization and shipping instructions.</li>
+                        <li>Securely pack your items and include the original invoice.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Exchanges</h2>
+                    <p>If you would like to exchange an item for a different size or color, please contact our concierge team. We will facilitate the exchange and ensure your new piece arrives promptly.</p>
+                </section>
+
+                <section>
+                    <h2>Refunds</h2>
+                    <p>Once your return is received and inspected, we will notify you of the approval or rejection of your refund. Approved refunds will be processed to your original method of payment within 5-10 business days.</p>
+                </section>
+            </div>
+        </article>
     </main>
 
     <footer class="footer">
@@ -94,7 +75,6 @@
                     <ul class="footer__list">
                         <li><a href="{{ url_for('product_catalog') }}">All Products</a></li>
                         <li><a href="{{ url_for('product_catalog') }}">New Arrivals</a></li>
-                        <li><a href="{{ url_for('product_catalog') }}">Featured</a></li>
                     </ul>
                 </div>
                 <div class="footer__col">
@@ -123,7 +103,5 @@
             </div>
         </div>
     </footer>
-
-    <script src="{{ url_for('static', filename='js/search-page.js') }}"></script>
 </body>
 </html>

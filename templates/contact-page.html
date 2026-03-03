@@ -21,7 +21,6 @@
                     <li><a href="{{ url_for('product_catalog') }}" class="nav_link">Shop</a></li>
                     <li><a href="{{ url_for('product_catalog') }}" class="nav_link">New in</a></li>
                     <li><a href="{{ url_for('about_page') }}" class="nav_link">About</a></li>
-                    <li><a href="{{ url_for('contact_page') }}" class="nav_link active">Contact</a></li>
                 </ul>
 
                 <a href="/" class="nav__logo">Mackkas</a>
@@ -108,8 +107,8 @@
                 <div class="footer__col">
                     <h4>Support</h4>
                     <ul class="footer__list">
-                        <li><a href="#">Shipping</a></li>
-                        <li><a href="#">Returns</a></li>
+                        <li><a href="{{ url_for('shipping_page') }}">Shipping</a></li>
+                        <li><a href="{{ url_for('returns_page') }}">Returns</a></li>
                         <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
                     </ul>
                 </div>
@@ -125,8 +124,8 @@
             <div class="footer__bottom">
                 <p>&copy; 2026 Mackkas. All rights reserved.</p>
                 <div class="footer__legal">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#" style="margin-left: 20px;">Terms of Service</a>
+                    <a href="{{ url_for('privacy_page') }}">Privacy Policy</a>
+                    <a href="{{ url_for('terms_page') }}" style="margin-left: 20px;">Terms of Service</a>
                 </div>
             </div>
         </div>

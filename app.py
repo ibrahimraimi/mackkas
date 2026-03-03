@@ -73,6 +73,22 @@ def about_page():
 def contact_page():
     return render_template('contact-page.html')
 
+@app.route('/shipping')
+def shipping_page():
+    return render_template('shipping-page.html')
+
+@app.route('/returns')
+def returns_page():
+    return render_template('returns-page.html')
+
+@app.route('/privacy')
+def privacy_page():
+    return render_template('privacy-page.html')
+
+@app.route('/terms')
+def terms_page():
+    return render_template('terms-page.html')
+
 @app.route('/api/auth/signup', methods=['POST'])
 def signup():
     data = request.json
