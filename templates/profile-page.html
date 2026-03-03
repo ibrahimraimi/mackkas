@@ -16,15 +16,17 @@
 
             <div class="profile__grid">
                 <aside class="profile__nav">
-                    <a href="#" class="profile__nav-link active">Profile Info</a>
-                    <a href="#" class="profile__nav-link">Order History</a>
-                    <a href="#" class="profile__nav-link">Saved Addresses</a>
-                    <a href="#" class="profile__nav-link">Payment Methods</a>
-                    <a href="{{ url_for('logout') }}" class="profile__nav-link" style="color: var(--color-error); border-top: 1px solid var(--color-neutral-50); margin-top: auto;">Sign Out</a>
+                    <button class="profile__nav-link active" data-section="info">Profile Info</button>
+                    <button class="profile__nav-link" data-section="orders">Order History</button>
+                    <button class="profile__nav-link" data-section="addresses">Saved Addresses</button>
+                    <button class="profile__nav-link" data-section="payments">Payment Methods</button>
+                    <button class="profile__nav-link" data-section="settings">Account Settings</button>
+                    <a href="{{ url_for('logout') }}" class="profile__nav-link" style="color: var(--color-error); border-top: 1px solid var(--color-neutral-100); margin-top: auto; padding-top: 20px;">Sign Out</a>
                 </aside>
 
                 <div class="profile__main">
-                    <div id="profileContent">
+                    <!-- Profile Info Section -->
+                    <div id="section-info" class="profile-section active">
                         <h2 class="profile__section-title">Personal Information</h2>
                         <div class="info-grid" id="userInfo">
                             <div class="info-item">
@@ -46,13 +48,92 @@
                         </div>
 
                         <h2 class="profile__section-title" style="margin-top: 60px;">Recent Activity</h2>
-                        <div id="activityFeed">
-                            <div style="padding: 20px 0; color: var(--color-neutral-400); font-size: 14px;">No recent orders found.</div>
+                        <div id="activityFeed" class="activity-feed">
+                            <!-- Activity items will be rendered here -->
+                             <div class="loading-placeholder">Loading activity...</div>
+                        </div>
+                    </div>
+
+                    <!-- Order History Section -->
+                    <div id="section-orders" class="profile-section">
+                        <h2 class="profile__section-title">Order History</h2>
+                        <div id="ordersList" class="orders-list">
+                            <div class="loading-placeholder">Loading orders...</div>
+                        </div>
+                    </div>
+
+                    <!-- Saved Addresses Section -->
+                    <div id="section-addresses" class="profile-section">
+                        <h2 class="profile__section-title">Saved Addresses</h2>
+                        <div id="addressesGrid" class="addresses-grid">
+                            <div class="loading-placeholder">Loading addresses...</div>
+                        </div>
+                        <button class="button button--outline" style="margin-top: 30px;">Add New Address</button>
+                    </div>
+
+                    <!-- Payment Methods Section -->
+                    <div id="section-payments" class="profile-section">
+                        <h2 class="profile__section-title">Payment Methods</h2>
+                        <div id="paymentsList" class="payments-list">
+                            <div class="loading-placeholder">Loading payment methods...</div>
+                        </div>
+                        <button class="button button--outline" style="margin-top: 30px;">Add New Card</button>
+                    </div>
+
+                    <!-- Account Settings Section -->
+                    <div id="section-settings" class="profile-section">
+                        <h2 class="profile__section-title">Account Settings</h2>
+                        
+                        <div class="settings-group">
+                            <h3 class="settings-group__title">Public Profile</h3>
+                            <form id="profileForm" class="settings-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="settingsUsername">Username</label>
+                                        <input type="text" id="settingsUsername" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="settingsEmail">Email Address</label>
+                                        <input type="email" id="settingsEmail" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="button button--primary" style="width: fit-content; min-width: 150px;">Save Changes</button>
+                            </form>
+                        </div>
+
+                        <div class="settings-group" style="margin-top: 60px;">
+                            <h3 class="settings-group__title">Security</h3>
+                            <form id="passwordForm" class="settings-form">
+                                <div class="form-group">
+                                    <label for="currentPassword">Current Password</label>
+                                    <input type="password" id="currentPassword" required>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="newPassword">New Password</label>
+                                        <input type="password" id="newPassword" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirmPassword">Confirm New Password</label>
+                                        <input type="password" id="confirmPassword" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="button button--primary" style="width: fit-content; min-width: 150px;">Update Password</button>
+                            </form>
+                        </div>
+
+                        <div class="settings-group danger-zone" style="margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--color-error-light, #fee2e2);">
+                            <h3 class="settings-group__title" style="color: var(--color-error);">Danger Zone</h3>
+                            <p style="font-size: 13px; color: var(--color-neutral-500); margin-bottom: 20px;">Once you delete your account, there is no going back. Please be certain.</p>
+                            <button class="button button--outline" style="color: var(--color-error); border-color: var(--color-error);">Delete My Account</button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+        
+        <!-- Toast Notification Container -->
+        <div id="toastContainer" class="toast-container"></div>
     </div>
 {% endblock %}
 
