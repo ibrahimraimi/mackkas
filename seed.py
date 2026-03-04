@@ -4,7 +4,7 @@ from app import app, db, Product
 
 # Mapping of dataset subdirectories to categories and cloth types
 CATEGORY_MAPPING = {
-    "men-formal-shirts": {"category": "men", "cloth": "shirt", "prefix": "Formal Shirt"},
+    "women-black-dresses": {"category": "women", "cloth": "dress", "prefix": "Little Black Dress"},
     "men-polo": {"category": "men", "cloth": "polo", "prefix": "Polo Shirt"},
     "men-shoes": {"category": "men", "cloth": "shoe", "prefix": "Essential Shoe"},
     "men-suits": {"category": "men", "cloth": "suit", "prefix": "Tailored Suit"},
