@@ -356,6 +356,32 @@ def get_product(id):
         'qty': 1
     })
 
+@app.route('/api/products/<int:id>/related', methods=['GET'])
+def get_related_products(id):
+    product = Product.query.get_or_404(id)
+    related = Product.query.filter(
+        Product.category == product.category,
+        Product.id != id
+    ).limit(4).all()
+    
+    result = []
+    for p in related:
+        img1 = p.img1
+        if img1 and not img1.endswith('.webp'):
+            webp_path = img1.rsplit('.', 1)[0] + '.webp'
+            if os.path.exists(os.path.join(app.static_folder, webp_path)):
+                img1 = webp_path
+        
+        result.append({
+            'id': p.id,
+            'name': p.name,
+            'price': f'${p.price:,.2f}',
+            'Price': p.price,
+            'category': p.category,
+            'img1': url_for('static', filename=img1)
+        })
+    return jsonify(result)
+
 @app.route('/api/cart', methods=['GET'])
 def get_cart():
     if 'user_id' not in session:

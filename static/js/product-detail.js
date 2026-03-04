@@ -39,9 +39,8 @@ async function FetchCart() {
 
 async function FetchRelated() {
     try {
-        const response = await fetch('/api/products');
-        const all = await response.json();
-        const related = all.filter(p => p.id !== CURRENT_PRODUCT_ID).slice(0, 4);
+        const response = await fetch(`/api/products/${CURRENT_PRODUCT_ID}/related`);
+        const related = await response.json();
         RenderRelated(related);
     } catch (error) {
         console.error("Error fetching related products:", error);
