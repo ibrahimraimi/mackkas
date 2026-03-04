@@ -40,20 +40,18 @@
   max-width: 400px;
 }
 
-.auth-mobile-logo {
+.auth-logo {
   text-align: center;
   margin-bottom: var(--spacing-8);
 }
 
-.auth-mobile-logo .nav__logo {
+.auth-logo .nav__logo {
   display: inline-block;
-  font-size: var(--text-base); /* Smaller than desktop header */
+  font-size: var(--text-base); /* Adjusted for auth forms */
 }
 
 @media (min-width: 1024px) {
-  .auth-mobile-logo {
-    display: none;
-  }
+  /* Logo remains visible on desktop as requested */
 }
 
 .auth-form-header {
