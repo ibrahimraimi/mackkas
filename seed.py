@@ -38,15 +38,20 @@ def seed_database():
 
             # Group by 2 for img1 and img2
             for i in range(0, len(files), 2):
+                # Image files
                 img1_file = files[i]
                 img2_file = files[i+1] if i+1 < len(files) else ""
-
-                item_index = (i // 2) + 1
-                name = f"{mapping['prefix']} {item_index}"
                 
+                # Use webp if available
+                def get_webp_if_exists(rel_path):
+                    webp_rel = rel_path.rsplit('.', 1)[0] + '.webp'
+                    if os.path.exists(os.path.join("static", webp_rel)):
+                        return webp_rel
+                    return rel_path
+
                 # Image paths relative to the static directory
-                img1_path = f"datasets/{subdir}/{img1_file}"
-                img2_path = f"datasets/{subdir}/{img2_file}" if img2_file else ""
+                img1_path = get_webp_if_exists(f"datasets/{subdir}/{img1_file}")
+                img2_path = get_webp_if_exists(f"datasets/{subdir}/{img2_file}") if img2_file else ""
 
                 new_product = Product(
                     name=name,

@@ -8,6 +8,14 @@ app.config['SECRET_KEY'] = 'your-secret-key-here'  # Change in production
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mackkas.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# Cache control for static assets
+@app.after_request
+def add_header(response):
+    if 'Cache-Control' not in response.headers:
+        if request.path.startswith('/static/'):
+            response.headers['Cache-Control'] = 'public, max-age=31536000'
+    return response
+
 db = SQLAlchemy(app)
 
 # Database Models
@@ -206,23 +214,51 @@ def get_user_activity():
 @app.route('/api/products', methods=['GET'])
 def get_products():
     products = Product.query.all()
-    return jsonify([{
-        'id': p.id,
-        'name': p.name,
-        'desc': p.description,
-        'Price': p.price,
-        'price': f'${p.price:,.2f}',
-        'category': p.category,
-        'cloth': p.cloth_type,
-        'img1': url_for('static', filename=p.img1),
-        'img2': url_for('static', filename=p.img2) if p.img2 else '',
-        'buy': 'Add to Cart',
-        'qty': 1
-    } for p in products])
+    result = []
+    for p in products:
+        # Check for webp version
+        img1 = p.img1
+        if img1 and not img1.endswith('.webp'):
+            webp_path = img1.rsplit('.', 1)[0] + '.webp'
+            if os.path.exists(os.path.join(app.static_folder, webp_path)):
+                img1 = webp_path
+        
+        img2 = p.img2
+        if img2 and not img2.endswith('.webp'):
+            webp_path = img2.rsplit('.', 1)[0] + '.webp'
+            if os.path.exists(os.path.join(app.static_folder, webp_path)):
+                img2 = webp_path
+
+        result.append({
+            'id': p.id,
+            'name': p.name,
+            'desc': p.description,
+            'Price': p.price,
+            'price': f'${p.price:,.2f}',
+            'category': p.category,
+            'cloth': p.cloth_type,
+            'img1': url_for('static', filename=img1),
+            'img2': url_for('static', filename=img2) if img2 else '',
+            'buy': 'Add to Cart',
+            'qty': 1
+        })
+    return jsonify(result)
 
 @app.route('/api/products/<int:id>', methods=['GET'])
 def get_product(id):
     p = Product.query.get_or_404(id)
+    img1 = p.img1
+    if img1 and not img1.endswith('.webp'):
+        webp_path = img1.rsplit('.', 1)[0] + '.webp'
+        if os.path.exists(os.path.join(app.static_folder, webp_path)):
+            img1 = webp_path
+    
+    img2 = p.img2
+    if img2 and not img2.endswith('.webp'):
+        webp_path = img2.rsplit('.', 1)[0] + '.webp'
+        if os.path.exists(os.path.join(app.static_folder, webp_path)):
+            img2 = webp_path
+
     return jsonify({
         'id': p.id,
         'name': p.name,
@@ -231,8 +267,8 @@ def get_product(id):
         'price': f'${p.price:,.2f}',
         'category': p.category,
         'cloth': p.cloth_type,
-        'img1': url_for('static', filename=p.img1),
-        'img2': url_for('static', filename=p.img2) if p.img2 else '',
+        'img1': url_for('static', filename=img1),
+        'img2': url_for('static', filename=img2) if img2 else '',
         'buy': 'Add to Cart',
         'qty': 1
     })

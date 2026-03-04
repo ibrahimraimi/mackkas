@@ -151,7 +151,7 @@ function RenderProducts(products) {
     Product_Grid.innerHTML = products.map(product => `
         <div class="product-card">
             <div class="product-card__image-wrapper">
-                <img src="${product.img1}" alt="${product.name}" class="product-card__image">
+                <img src="${product.img1}" alt="${product.name}" class="product-card__image" loading="lazy">
             </div>
             <div class="product-card__details">
                 <p class="product-card__category">${product.category} / ${product.cloth}</p>
