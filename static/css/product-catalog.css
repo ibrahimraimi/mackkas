@@ -133,6 +133,7 @@
 .product-card {
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 }
 
 .product-card__image-wrapper {
@@ -179,12 +180,8 @@
 
 .product-card__cta {
   margin-top: var(--spacing-4);
-  opacity: 0;
-  transition: opacity var(--transition-base);
-}
-
-.product-card:hover .product-card__cta {
   opacity: 1;
+  transition: opacity var(--transition-base);
 }
 
 /* Responsiveness */

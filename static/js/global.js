@@ -43,4 +43,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     UpdateGlobalCartBadge();
+
+    // Mobile Menu Logic
+    const Mobile_Menu = document.getElementById("mobileMenu");
+    const Mobile_Menu_Overlay = document.getElementById("mobileMenuOverlay");
+    const Open_Mobile_Menu_Btn = document.getElementById("openMobileMenu");
+    const Close_Mobile_Menu_Btn = document.getElementById("closeMobileMenu");
+
+    const OpenMobileMenu = () => {
+        if (Mobile_Menu) Mobile_Menu.classList.add("active");
+        if (Mobile_Menu_Overlay) Mobile_Menu_Overlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+    };
+
+    const CloseMobileMenu = () => {
+        if (Mobile_Menu) Mobile_Menu.classList.remove("active");
+        if (Mobile_Menu_Overlay) Mobile_Menu_Overlay.classList.remove("active");
+        document.body.style.overflow = "auto";
+    };
+
+    if (Open_Mobile_Menu_Btn) Open_Mobile_Menu_Btn.onclick = OpenMobileMenu;
+    if (Close_Mobile_Menu_Btn) Close_Mobile_Menu_Btn.onclick = CloseMobileMenu;
+    if (Mobile_Menu_Overlay) Mobile_Menu_Overlay.onclick = CloseMobileMenu;
 });

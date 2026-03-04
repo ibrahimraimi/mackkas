@@ -149,7 +149,7 @@ function RenderProducts(products) {
     }
 
     Product_Grid.innerHTML = products.map(product => `
-        <div class="product-card">
+        <div class="product-card" onclick="window.location.href='/product/${product.id}'">
             <div class="product-card__image-wrapper">
                 <img src="${product.img1}" alt="${product.name}" class="product-card__image" loading="lazy">
             </div>
@@ -157,9 +157,11 @@ function RenderProducts(products) {
                 <p class="product-card__category">${product.category} / ${product.cloth}</p>
                 <h3 class="product-card__title">${product.name}</h3>
                 <p class="product-card__price">$${product.Price.toFixed(2)}</p>
-                <button class="button button--primary w-full m-0" style="padding: 10px; font-size: 10px; margin-top: 15px;" onclick="AddToCart(${product.id})">
-                    Add to Bag
-                </button>
+                <div class="product-card__cta">
+                    <button class="button button--primary w-full m-0" style="padding: 10px; font-size: 10px; margin-top: 15px;" onclick="event.stopPropagation(); AddToCart(${product.id})">
+                        Add to Bag
+                    </button>
+                </div>
             </div>
         </div>
     `).join("");

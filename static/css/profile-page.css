@@ -262,7 +262,6 @@
   .info-grid, .addresses-grid { grid-template-columns: 1fr; }
 }
 
-/* Account Settings - Premium LINEA Styling */
 .settings-group {
   margin-bottom: 60px;
   max-width: 800px;
