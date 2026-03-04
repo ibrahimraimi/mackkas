@@ -243,8 +243,17 @@ def get_products():
     min_price = request.args.get('min_price', type=float)
     max_price = request.args.get('max_price', type=float)
     sort = request.args.get('sort', 'featured')
+    q = request.args.get('q')
 
     query = Product.query
+
+    if q:
+        search = f"%{q}%"
+        query = query.filter(db.or_(
+            Product.name.ilike(search),
+            Product.description.ilike(search),
+            Product.category.ilike(search)
+        ))
 
     if category:
         query = query.filter(Product.category == category)

@@ -2,41 +2,38 @@ const Search_Input = document.getElementById("searchInput");
 const Results_Grid = document.getElementById("searchResultsGrid");
 const Search_Stats = document.getElementById("searchStats");
 
-let All_Products = [];
+let searchTimeout;
 
 async function Init() {
-    await FetchProducts();
-    Search_Input.addEventListener("input", (e) => HandleSearch(e.target.value));
+    Search_Input.addEventListener("input", (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => HandleSearch(e.target.value), 300);
+    });
 }
 
-async function FetchProducts() {
-    try {
-        const response = await fetch('/api/products');
-        All_Products = await response.json();
-    } catch (error) {
-        console.error("Error fetching products:", error);
-    }
-}
-
-function HandleSearch(query) {
+async function HandleSearch(query) {
     if (!query.trim()) {
         Results_Grid.innerHTML = "";
         Search_Stats.textContent = "Type to start searching";
         return;
     }
 
-    const filtered = All_Products.filter(p => 
-        p.name.toLowerCase().includes(query.toLowerCase()) || 
-        p.category.toLowerCase().includes(query.toLowerCase()) ||
-        p.desc.toLowerCase().includes(query.toLowerCase())
-    );
-
-    RenderResults(filtered);
-    Search_Stats.textContent = `Found ${filtered.length} results for "${query}"`;
+    try {
+        Search_Stats.textContent = "Searching...";
+        // Fetch up to 100 results for search
+        const response = await fetch(`/api/products?q=${encodeURIComponent(query)}&per_page=100`);
+        const data = await response.json();
+        
+        RenderResults(data.items);
+        Search_Stats.textContent = `Found ${data.total} results for "${query}"`;
+    } catch (error) {
+        console.error("Error searching products:", error);
+        Search_Stats.textContent = "Error fetching results";
+    }
 }
 
 function RenderResults(products) {
-    if (products.length === 0) {
+    if (!products || products.length === 0) {
         Results_Grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--color-neutral-400);">No results found matching your search.</div>`;
         return;
     }
