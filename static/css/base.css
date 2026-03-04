@@ -4,6 +4,7 @@
   /* Minimalist Grayscale Palette */
   --color-black: #000000;
   --color-white: #ffffff;
+  --color-neutral-50: #fafafa;
   --color-neutral-100: #f9f9f9;
   --color-neutral-200: #eeeeee;
   --color-neutral-300: #dddddd;
@@ -12,6 +13,7 @@
   --color-neutral-600: #666666;
   --color-neutral-700: #444444;
   --color-neutral-800: #222222;
+  --color-neutral-900: #111111;
   
   /* Semantic Colors */
   --color-success: #27ae60;

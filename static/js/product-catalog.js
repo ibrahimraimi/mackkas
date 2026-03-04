@@ -41,6 +41,7 @@ async function Init() {
     await SetupCategories(); // Fetch filter options first
     await FetchProducts();
     await FetchCart();
+    SetupSortDropdown();
 }
 
 async function FetchProducts() {
@@ -68,6 +69,7 @@ async function FetchProducts() {
         RenderProducts(All_Products);
         RenderPagination();
         UpdateURL();
+        SyncUIState();
     } catch (error) {
         console.error("Error fetching products:", error);
     }
@@ -93,23 +95,24 @@ async function SetupCategories() {
         // Render pills
         if (Category_Pill_List) {
             Category_Pill_List.innerHTML = `
-                <div class="category-pill ${!Active_Filters.category ? 'active' : ''}" onclick="SetCategory(null, this)">All</div>
-                ${categories.map(cat => `<div class="category-pill ${Active_Filters.category === cat ? 'active' : ''}" onclick="SetCategory('${cat}', this)">${cat}</div>`).join("")}
+                <div class="category-pill" onclick="SetCategory(null, this)">All</div>
+                ${categories.map(cat => `<div class="category-pill" onclick="SetCategory('${cat}', this)">${cat}</div>`).join("")}
             `;
         }
 
         // Render filter drawer options
         if (Category_Filter_Options) {
             Category_Filter_Options.innerHTML = categories.map(cat => `
-                <div class="filter-option ${Active_Filters.category === cat ? 'active' : ''}" onclick="ToggleFilter('category', '${cat}', this)">${cat}</div>
+                <div class="filter-option" onclick="ToggleFilter('category', '${cat}', this)">${cat}</div>
             `).join("");
         }
 
         if (Cloth_Type_Filter_Options) {
             Cloth_Type_Filter_Options.innerHTML = clothTypes.map(type => `
-                <div class="filter-option ${Active_Filters.clothType.includes(type) ? 'active' : ''}" onclick="ToggleFilter('clothType', '${type}', this)">${type}</div>
+                <div class="filter-option" onclick="ToggleFilter('clothType', '${type}', this)">${type}</div>
             `).join("");
         }
+        SyncUIState();
     } catch (error) {
         console.error("Error setting up categories:", error);
     }
@@ -125,10 +128,6 @@ function ToggleFilterMenu() {
 function SetCategory(cat, el) {
     Active_Filters.category = cat;
     Active_Filters.page = 1; // Reset to page 1
-    
-    // Update pills UI
-    document.querySelectorAll(".category-pill").forEach(p => p.classList.remove("active"));
-    el.classList.add("active");
 
     Current_Category_Title.textContent = cat ? `${cat.charAt(0).toUpperCase() + cat.slice(1)} Collection` : "All Collection";
     
@@ -143,7 +142,67 @@ function ToggleFilter(type, value, el) {
         if (index > -1) Active_Filters.clothType.splice(index, 1);
         else Active_Filters.clothType.push(value);
     }
-    el.classList.toggle("active");
+    SyncUIState();
+}
+
+function SyncUIState() {
+    // Sync Category Pills
+    document.querySelectorAll(".category-pill").forEach(pill => {
+        const pillText = pill.textContent.trim().toLowerCase();
+        const isActive = (pillText === "all" && !Active_Filters.category) || (pillText === Active_Filters.category);
+        pill.classList.toggle("active", isActive);
+    });
+
+    // Sync Filter Drawer - Categories
+    document.querySelectorAll("#categoryFilterOptions .filter-option").forEach(opt => {
+        const optText = opt.textContent.trim();
+        opt.classList.toggle("active", optText === Active_Filters.category);
+    });
+
+    // Sync Filter Drawer - Cloth Types
+    document.querySelectorAll("#clothTypeFilterOptions .filter-option").forEach(opt => {
+        const optText = opt.textContent.trim();
+        opt.classList.toggle("active", Active_Filters.clothType.includes(optText));
+    });
+
+    // Sync Custom Sort Dropdown
+    const sortOptions = document.querySelectorAll(".custom-dropdown__option");
+    sortOptions.forEach(opt => {
+        const val = opt.getAttribute("data-value");
+        const isActive = val === Active_Filters.sort;
+        opt.classList.toggle("active", isActive);
+        if (isActive) {
+            const selectedText = document.getElementById("sortSelectedText");
+            if (selectedText) selectedText.textContent = opt.textContent;
+        }
+    });
+}
+
+function SetupSortDropdown() {
+    const dropdown = document.getElementById("sortDropdown");
+    if (!dropdown) return;
+
+    const selected = dropdown.querySelector(".custom-dropdown__selected");
+    const options = dropdown.querySelectorAll(".custom-dropdown__option");
+
+    selected.addEventListener("click", () => {
+        dropdown.classList.toggle("open");
+    });
+
+    options.forEach(opt => {
+        opt.addEventListener("click", () => {
+            const val = opt.getAttribute("data-value");
+            HandleSort(val);
+            dropdown.classList.remove("open");
+        });
+    });
+
+    // Close when clicking outside
+    document.addEventListener("click", (e) => {
+        if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove("open");
+        }
+    });
 }
 
 function ApplyFilters() {

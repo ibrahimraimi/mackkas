@@ -28,11 +28,17 @@
             </div>
             
             <div class="toolbar__sort">
-                <select id="sortSelect" onchange="HandleSort(this.value)" class="filter-btn" style="border:none; background:none; text-transform: uppercase;">
-                    <option value="featured">Sort by: Featured</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                </select>
+                <div class="custom-dropdown" id="sortDropdown">
+                    <div class="custom-dropdown__selected">
+                        <span id="sortSelectedText">Sort by: Featured</span>
+                        <iconify-icon icon="lucide:chevron-down"></iconify-icon>
+                    </div>
+                    <div class="custom-dropdown__options">
+                        <div class="custom-dropdown__option active" data-value="featured">Sort by: Featured</div>
+                        <div class="custom-dropdown__option" data-value="price-low">Price: Low to High</div>
+                        <div class="custom-dropdown__option" data-value="price-high">Price: High to Low</div>
+                    </div>
+                </div>
             </div>
         </div>
 
