@@ -4,15 +4,15 @@ from app import app
 from server.extensions import db
 from server.models import Product
 
-# Mapping of dataset subdirectories to categories and cloth types
+# Mapping of dataset subdirectories to categories and product types
 CATEGORY_MAPPING = {
-    "women-black-dresses": {"category": "women", "cloth": "dress", "prefix": "Little Black Dress"},
-    "men-polo": {"category": "men", "cloth": "polo", "prefix": "Polo Shirt"},
-    "men-shoes": {"category": "men", "cloth": "shoe", "prefix": "Essential Shoe"},
-    "men-suits": {"category": "men", "cloth": "suit", "prefix": "Tailored Suit"},
-    "women-bags": {"category": "women", "cloth": "bag", "prefix": "Designer Bag"},
-    "women-dresses": {"category": "women", "cloth": "dress", "prefix": "Elegant Dress"},
-    "women-heels": {"category": "women", "cloth": "heel", "prefix": "Stylish Heel"}
+    "women-black-dresses": {"category": "women", "product_type": "dress", "prefix": "Little Black Dress"},
+    "men-polo": {"category": "men", "product_type": "polo", "prefix": "Polo Shirt"},
+    "men-shoes": {"category": "men", "product_type": "shoe", "prefix": "Essential Shoe"},
+    "men-suits": {"category": "men", "product_type": "suit", "prefix": "Tailored Suit"},
+    "women-bags": {"category": "women", "product_type": "bag", "prefix": "Designer Bag"},
+    "women-dresses": {"category": "women", "product_type": "dress", "prefix": "Elegant Dress"},
+    "women-heels": {"category": "women", "product_type": "heel", "prefix": "Stylish Heel"}
 }
 
 def seed_database():
@@ -41,11 +41,11 @@ def seed_database():
             files = [f for f in os.listdir(subdir_path) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp', '.avif'))]
             files.sort()
 
-            # Group by 2 for img1 and img2
+            # Group by 2 for primary and secondary images
             for i in range(0, len(files), 2):
                 # Image files
-                img1_file = files[i]
-                img2_file = files[i+1] if i+1 < len(files) else ""
+                primary_image_file = files[i]
+                secondary_image_file = files[i+1] if i+1 < len(files) else ""
                 
                 # Product name
                 product_index = (i // 2) + 1
@@ -59,17 +59,17 @@ def seed_database():
                     return rel_path
 
                 # Image paths relative to the static directory
-                img1_path = get_webp_if_exists(f"datasets/{subdir}/{img1_file}")
-                img2_path = get_webp_if_exists(f"datasets/{subdir}/{img2_file}") if img2_file else ""
+                primary_image_path = get_webp_if_exists(f"datasets/{subdir}/{primary_image_file}")
+                secondary_image_path = get_webp_if_exists(f"datasets/{subdir}/{secondary_image_file}") if secondary_image_file else ""
 
                 new_product = Product(
                     name=name,
-                    description=f"Premium {mapping['cloth']} from our {mapping['category']}'s collection.",
+                    description=f"Premium {mapping['product_type']} from our {mapping['category']}'s collection.",
                     price=float(random.randint(45, 1200)),
                     category=mapping['category'],
-                    cloth_type=mapping['cloth'],
-                    img1=img1_path,
-                    img2=img2_path
+                    product_type=mapping['product_type'],
+                    primary_image=primary_image_path,
+                    secondary_image=secondary_image_path
                 )
                 db.session.add(new_product)
                 products_added += 1

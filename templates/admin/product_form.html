@@ -37,33 +37,46 @@
                 </div>
                 <div class="form-group">
                     <label for="category">Category</label>
-                    <select id="category" name="category" class="form-control" required>
+                    <select id="category" name="category" class="form-control">
                         <option value="women" {% if product and product.category == 'women' %}selected{% endif %}>Women</option>
                         <option value="men" {% if product and product.category == 'men' %}selected{% endif %}>Men</option>
                         <option value="jewelry" {% if product and product.category == 'jewelry' %}selected{% endif %}>Jewelry</option>
+                        {% if product and product.category and product.category not in ['women', 'men', 'jewelry'] %}
+                        <option value="{{ product.category }}" selected>{{ product.category|capitalize }}</option>
+                        {% endif %}
                     </select>
+                </div>
+                <div class="form-group">
+                    <label for="new_category">New Category (Optional)</label>
+                    <input type="text" id="new_category" name="new_category" class="form-control" placeholder="Override dropdown...">
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="cloth_type">Product Type (e.g., dress, suit, ring)</label>
-                <input type="text" id="cloth_type" name="cloth_type" class="form-control" value="{{ product.cloth_type if product else '' }}" required>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="cloth_type">Product Type (e.g., dress, suit, ring)</label>
+                    <input type="text" id="cloth_type" name="cloth_type" class="form-control" value="{{ product.product_type if product else '' }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="new_cloth_type">New Product Type (Optional)</label>
+                    <input type="text" id="new_cloth_type" name="new_cloth_type" class="form-control" placeholder="Override above...">
+                </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label for="img1">Main Image</label>
                     <input type="file" id="img1" name="img1" class="form-control" accept="image/*" {% if not product %}required{% endif %}>
-                    {% if product and product.img1 %}
-                    <small class="form-help">Current: {{ product.img1 }}</small>
+                    {% if product and product.primary_image %}
+                    <small class="form-help">Current: {{ product.primary_image }}</small>
                     {% endif %}
                 </div>
 
                 <div class="form-group">
                     <label for="img2">Secondary Image (Optional)</label>
                     <input type="file" id="img2" name="img2" class="form-control" accept="image/*">
-                    {% if product and product.img2 %}
-                    <small class="form-help">Current: {{ product.img2 }}</small>
+                    {% if product and product.secondary_image %}
+                    <small class="form-help">Current: {{ product.secondary_image }}</small>
                     {% endif %}
                 </div>
             </div>

@@ -41,6 +41,33 @@ python3 app.py
 ```
 Open your browser to `http://127.0.0.1:5000` to see the site in action!
 
+### 6. Database Migrations
+If you're setting up migrations for the first time, or if the `migrations` folder is missing, run:
+```bash
+# Initialize the migrations directory
+flask db init
+```
+
+Then, to create and apply changes to the models:
+```bash
+# Create a new migration script
+flask db migrate -m "Description of changes"
+
+# Apply the migration to the database
+flask db upgrade
+```
+*Note: Ensure your virtual environment is active before running these commands.*
+
+### 7. Create Admin User
+You can create an admin user directly from the CLI. This is recommended for setting up the initial administrator account:
+```bash
+flask create-admin <username> <email> <password>
+```
+Example:
+```bash
+flask create-admin admin admin@mackkas.com securepassword123
+```
+
 ---
 
 ## Key Features

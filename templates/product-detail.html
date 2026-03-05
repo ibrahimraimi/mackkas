@@ -6,11 +6,11 @@
 
 {% block og_title %}{{ product.name }}{% endblock %}
 {% block og_description %}{{ product.description }}{% endblock %}
-{% block og_image %}{{ url_for('static', filename=product.img1) }}{% endblock %}
+{% block og_image %}{{ url_for('static', filename=product.primary_image) }}{% endblock %}
 
 {% block twitter_title %}{{ product.name }}{% endblock %}
 {% block twitter_description %}{{ product.description }}{% endblock %}
-{% block twitter_image %}{{ url_for('static', filename=product.img1) }}{% endblock %}
+{% block twitter_image %}{{ url_for('static', filename=product.primary_image) }}{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/product-detail.css') }}">

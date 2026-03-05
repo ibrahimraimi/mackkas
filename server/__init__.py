@@ -44,6 +44,10 @@ def create_app():
     app.register_blueprint(user_bp)
     app.register_blueprint(admin_bp)
 
+    # Register CLI commands
+    from .commands import create_admin
+    app.cli.add_command(create_admin)
+
     # Cache control for static assets
     @app.after_request
     def add_header(response):

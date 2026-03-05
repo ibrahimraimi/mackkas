@@ -30,7 +30,7 @@ def get_products():
         query = query.filter(Product.category == category)
     
     if cloth_type:
-        query = query.filter(Product.cloth_type.in_(cloth_type))
+        query = query.filter(Product.product_type.in_(cloth_type))
     
     if min_price is not None:
         query = query.filter(Product.price >= min_price)
@@ -43,20 +43,20 @@ def get_products():
     elif sort == 'price-high':
         query = query.order_by(Product.price.desc())
     else:
-        query = query.order_by(Product.id.asc())
+        query = query.order_by(Product.id.desc())
 
     pagination = query.paginate(page=page, per_page=per_page, error_out=False)
     
     products = pagination.items
     result = []
     for p in products:
-        img1 = p.img1
+        img1 = p.primary_image
         if img1 and not img1.endswith('.webp'):
             webp_path = img1.rsplit('.', 1)[0] + '.webp'
             if os.path.exists(os.path.join(current_app.static_folder, webp_path)):
                 img1 = webp_path
         
-        img2 = p.img2
+        img2 = p.secondary_image
         if img2 and not img2.endswith('.webp'):
             webp_path = img2.rsplit('.', 1)[0] + '.webp'
             if os.path.exists(os.path.join(current_app.static_folder, webp_path)):
@@ -69,7 +69,7 @@ def get_products():
             'Price': p.price,
             'price': f'${p.price:,.2f}',
             'category': p.category,
-            'cloth': p.cloth_type,
+            'cloth': p.product_type,
             'img1': url_for('static', filename=img1),
             'img2': url_for('static', filename=img2) if img2 else url_for('static', filename=img1),
             'buy': 'Add to Cart',
@@ -88,7 +88,7 @@ def get_products():
 @products_bp.route('/api/products/meta', methods=['GET'])
 def get_products_meta():
     categories = db.session.query(Product.category).distinct().all()
-    cloth_types = db.session.query(Product.cloth_type).distinct().all()
+    cloth_types = db.session.query(Product.product_type).distinct().all()
     
     return jsonify({
         'categories': [c[0] for c in categories if c[0]],
@@ -98,13 +98,13 @@ def get_products_meta():
 @products_bp.route('/api/products/<int:id>', methods=['GET'])
 def get_product(id):
     p = Product.query.get_or_404(id)
-    img1 = p.img1
+    img1 = p.primary_image
     if img1 and not img1.endswith('.webp'):
         webp_path = img1.rsplit('.', 1)[0] + '.webp'
         if os.path.exists(os.path.join(current_app.static_folder, webp_path)):
             img1 = webp_path
     
-    img2 = p.img2
+    img2 = p.secondary_image
     if img2 and not img2.endswith('.webp'):
         webp_path = img2.rsplit('.', 1)[0] + '.webp'
         if os.path.exists(os.path.join(current_app.static_folder, webp_path)):
@@ -117,7 +117,7 @@ def get_product(id):
         'Price': p.price,
         'price': f'${p.price:,.2f}',
         'category': p.category,
-        'cloth': p.cloth_type,
+        'cloth': p.product_type,
         'img1': url_for('static', filename=img1),
         'img2': url_for('static', filename=img2) if img2 else '',
         'buy': 'Add to Cart',
@@ -134,7 +134,7 @@ def get_related_products(id):
     
     result = []
     for p in related:
-        img1 = p.img1
+        img1 = p.primary_image
         if img1 and not img1.endswith('.webp'):
             webp_path = img1.rsplit('.', 1)[0] + '.webp'
             if os.path.exists(os.path.join(current_app.static_folder, webp_path)):
