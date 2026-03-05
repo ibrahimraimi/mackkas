@@ -1,6 +1,8 @@
 import os
 import random
-from app import app, db, Product
+from app import app
+from server.extensions import db
+from server.models import Product
 
 # Mapping of dataset subdirectories to categories and cloth types
 CATEGORY_MAPPING = {

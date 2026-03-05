@@ -70,14 +70,14 @@
                     <div class="form-options">
                         <label class="checkbox-container">
                             <input type="checkbox" required>
-                            I agree to the <a href="{{ url_for('terms_page') }}">Terms & Conditions</a>
+                            I agree to the <a href="{{ url_for('main.terms_page') }}">Terms & Conditions</a>
                         </label>
                     </div>
 
                     <button type="submit" id="signup_btn" class="button button--primary w-full">Join Mackkas</button>
 
                     <p class="auth-switch">
-                       <p class="auth-form__text">Already have an account? <a href="{{ url_for('main.login_page') }}" class="auth-form__link">Log in</a></p>
+                        Already have an account? <a href="{{ url_for('main.login_page') }}" class="auth-form__link">Sign in instead</a>
                     </p>
                 </form>
             </div>
