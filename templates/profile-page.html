@@ -21,6 +21,7 @@
                     <button class="profile__nav-link" data-section="addresses">Saved Addresses</button>
                     <button class="profile__nav-link" data-section="payments">Payment Methods</button>
                     <button class="profile__nav-link" data-section="settings">Account Settings</button>
+                    <a href="{{ url_for('admin.dashboard') }}" class="profile__nav-link" id="adminLink" style="display: none; color: #b91c1c; font-weight: 600;">Admin Dashboard</a>
                     <a href="{{ url_for('auth.logout') }}" class="button button--outline">Logout</a>
                 </aside>
 
@@ -39,7 +40,7 @@
                             </div>
                             <div class="info-item">
                                 <span class="info-item__label">Account Status</span>
-                                <span class="info-item__value">Verified Member</span>
+                                <span class="info-item__value" id="accountStatus">Verified Member</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-item__label">Joined Date</span>

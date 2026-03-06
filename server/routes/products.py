@@ -51,13 +51,14 @@ def get_products():
     result = []
     for p in products:
         img1 = p.primary_image
-        if img1 and not img1.endswith('.webp'):
+        if img1 and not img1.startswith('http'):
+            # Check for webp version first
             webp_path = img1.rsplit('.', 1)[0] + '.webp'
             if os.path.exists(os.path.join(current_app.static_folder, webp_path)):
                 img1 = webp_path
         
         img2 = p.secondary_image
-        if img2 and not img2.endswith('.webp'):
+        if img2 and not img2.startswith('http'):
             webp_path = img2.rsplit('.', 1)[0] + '.webp'
             if os.path.exists(os.path.join(current_app.static_folder, webp_path)):
                 img2 = webp_path
@@ -99,13 +100,13 @@ def get_products_meta():
 def get_product(id):
     p = Product.query.get_or_404(id)
     img1 = p.primary_image
-    if img1 and not img1.endswith('.webp'):
+    if img1 and not img1.startswith('http'):
         webp_path = img1.rsplit('.', 1)[0] + '.webp'
         if os.path.exists(os.path.join(current_app.static_folder, webp_path)):
             img1 = webp_path
     
     img2 = p.secondary_image
-    if img2 and not img2.endswith('.webp'):
+    if img2 and not img2.startswith('http'):
         webp_path = img2.rsplit('.', 1)[0] + '.webp'
         if os.path.exists(os.path.join(current_app.static_folder, webp_path)):
             img2 = webp_path

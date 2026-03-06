@@ -21,14 +21,21 @@ def admin_required(f):
     return decorated_function
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif', 'webp', 'avif'}
 
 def save_upload(file, folder):
-    if file and file.filename and allowed_file(file.filename):
+    if not file or not file.filename:
+        return None
+        
+    if allowed_file(file.filename):
         filename = secure_filename(file.filename)
         filename = f"{int(time.time())}_{filename}"
-        file.save(os.path.join(folder, filename))
-        return f"uploads/products/{filename}"
+        
+        os.makedirs(folder, exist_ok=True)
+        save_path = os.path.join(folder, filename)
+        file.save(save_path)
+        
+        return f"images/{filename}"
     return None
 
 @admin_bp.route('/')

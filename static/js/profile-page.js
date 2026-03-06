@@ -181,6 +181,17 @@ async function FetchUserProfile() {
             const user = await response.json();
             User_Name_Display.textContent = user.username;
             User_Email_Display.textContent = user.email;
+            
+            if (user.is_admin) {
+                const statusEl = document.getElementById("accountStatus");
+                if (statusEl) {
+                    statusEl.innerHTML = 'Verified Member <span style="background: #000; color: #fff; font-size: 8px; padding: 2px 6px; text-transform: uppercase; margin-left: 10px; font-weight: 600; letter-spacing: 0.1em;">Admin</span>';
+                }
+                const adminLink = document.getElementById("adminLink");
+                if (adminLink) {
+                    adminLink.style.display = 'block';
+                }
+            }
         } else {
             window.location.href = "/login";
         }

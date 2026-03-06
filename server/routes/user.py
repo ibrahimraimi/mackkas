@@ -20,7 +20,8 @@ def get_user_profile():
     user = User.query.get(session['user_id'])
     return jsonify({
         'username': user.username,
-        'email': user.email
+        'email': user.email,
+        'is_admin': user.is_admin
     })
 
 @user_bp.route('/api/user/orders', methods=['GET'])

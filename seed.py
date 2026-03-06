@@ -1,18 +1,19 @@
 import os
 import random
+import shutil
 from app import app
 from server.extensions import db
-from server.models import Product
+from server.models import Product, CartItem
 
 # Mapping of dataset subdirectories to categories and product types
 CATEGORY_MAPPING = {
-    "women-black-dresses": {"category": "women", "product_type": "dress", "prefix": "Little Black Dress"},
-    "men-polo": {"category": "men", "product_type": "polo", "prefix": "Polo Shirt"},
-    "men-shoes": {"category": "men", "product_type": "shoe", "prefix": "Essential Shoe"},
-    "men-suits": {"category": "men", "product_type": "suit", "prefix": "Tailored Suit"},
-    "women-bags": {"category": "women", "product_type": "bag", "prefix": "Designer Bag"},
-    "women-dresses": {"category": "women", "product_type": "dress", "prefix": "Elegant Dress"},
-    "women-heels": {"category": "women", "product_type": "heel", "prefix": "Stylish Heel"}
+    "women-black-dresses": {"category": "women", "product_type": "dress", "prefix": "Little Black Dress", "slug": "black-dress"},
+    "men-polo": {"category": "men", "product_type": "polo", "prefix": "Polo Shirt", "slug": "polo-shirt"},
+    "men-shoes": {"category": "men", "product_type": "shoe", "prefix": "Essential Shoe", "slug": "essential-shoe"},
+    "men-suits": {"category": "men", "product_type": "suit", "prefix": "Tailored Suit", "slug": "tailored-suit"},
+    "women-bags": {"category": "women", "product_type": "bag", "prefix": "Designer Bag", "slug": "designer-bag"},
+    "women-dresses": {"category": "women", "product_type": "dress", "prefix": "Elegant Dress", "slug": "elegant-dress"},
+    "women-heels": {"category": "women", "product_type": "heel", "prefix": "Stylish Heel", "slug": "stylish-heel"}
 }
 
 def seed_database():
@@ -22,18 +23,22 @@ def seed_database():
         
         # Clear existing products to ensure a fresh seed
         db.create_all()
-        print("Clearing existing products...")
+        print("Clearing existing products and cart items...")
+        CartItem.query.delete()
         Product.query.delete()
         db.session.commit()
 
-        dataset_dir = os.path.join("static", "datasets")
-        if not os.path.exists(dataset_dir):
-            print(f"Dataset directory not found: {dataset_dir}")
+        dataset_root = os.path.join("static", "datasets")
+        images_dir = os.path.join("static", "images")
+        os.makedirs(images_dir, exist_ok=True)
+
+        if not os.path.exists(dataset_root):
+            print(f"Dataset directory not found: {dataset_root}")
             return
 
         products_added = 0
         for subdir, mapping in CATEGORY_MAPPING.items():
-            subdir_path = os.path.join(dataset_dir, subdir)
+            subdir_path = os.path.join(dataset_root, subdir)
             if not os.path.exists(subdir_path):
                 continue
 
@@ -47,20 +52,25 @@ def seed_database():
                 primary_image_file = files[i]
                 secondary_image_file = files[i+1] if i+1 < len(files) else ""
                 
-                # Product name
+                # Product numbering
                 product_index = (i // 2) + 1
                 name = f"{mapping['prefix']} {product_index}"
                 
-                # Use webp if available
-                def get_webp_if_exists(rel_path):
-                    webp_rel = rel_path.rsplit('.', 1)[0] + '.webp'
-                    if os.path.exists(os.path.join("static", webp_rel)):
-                        return webp_rel
-                    return rel_path
+                # Copy and Rename files to static/images
+                def process_image(src_file, suffix):
+                    if not src_file: return ""
+                    ext = src_file.rsplit('.', 1)[1].lower()
+                    new_filename = f"{mapping['slug']}-{product_index}-{suffix}.{ext}"
+                    src_path = os.path.join(subdir_path, src_file)
+                    dst_path = os.path.join(images_dir, new_filename)
+                    
+                    # Copy
+                    shutil.copy2(src_path, dst_path)
+                    
+                    return f"images/{new_filename}"
 
-                # Image paths relative to the static directory
-                primary_image_path = get_webp_if_exists(f"datasets/{subdir}/{primary_image_file}")
-                secondary_image_path = get_webp_if_exists(f"datasets/{subdir}/{secondary_image_file}") if secondary_image_file else ""
+                primary_image_path = process_image(primary_image_file, "primary")
+                secondary_image_path = process_image(secondary_image_file, "secondary")
 
                 new_product = Product(
                     name=name,
@@ -75,7 +85,7 @@ def seed_database():
                 products_added += 1
 
         db.session.commit()
-        print(f"Database seeded with {products_added} products from datasets!")
+        print(f"Database seeded with {products_added} products. Images stored in static/images/")
 
 if __name__ == "__main__":
     seed_database()
