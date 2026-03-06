@@ -15,8 +15,13 @@ def get_products():
     max_price = request.args.get('max_price', type=float)
     sort = request.args.get('sort', 'featured')
     q = request.args.get('q')
+    new_only = request.args.get('new_only') == 'true'
 
     query = Product.query
+    
+    if new_only:
+        from datetime import datetime, timedelta
+        query = query.filter(Product.created_at >= (datetime.utcnow() - timedelta(days=14)))
 
     if q:
         search = f"%{q}%"
@@ -63,6 +68,11 @@ def get_products():
             if os.path.exists(os.path.join(current_app.static_folder, webp_path)):
                 img2 = webp_path
 
+        from datetime import datetime, timedelta
+        is_new = False
+        if p.created_at:
+            is_new = p.created_at >= (datetime.utcnow() - timedelta(days=14))
+
         result.append({
             'id': p.id,
             'name': p.name,
@@ -74,7 +84,8 @@ def get_products():
             'img1': url_for('static', filename=img1),
             'img2': url_for('static', filename=img2) if img2 else url_for('static', filename=img1),
             'buy': 'Add to Cart',
-            'qty': 1
+            'qty': 1,
+            'is_new': is_new
         })
 
     return jsonify({
@@ -111,6 +122,11 @@ def get_product(id):
         if os.path.exists(os.path.join(current_app.static_folder, webp_path)):
             img2 = webp_path
 
+    from datetime import datetime, timedelta
+    is_new = False
+    if p.created_at:
+        is_new = p.created_at >= (datetime.utcnow() - timedelta(days=14))
+
     return jsonify({
         'id': p.id,
         'name': p.name,
@@ -122,7 +138,8 @@ def get_product(id):
         'img1': url_for('static', filename=img1),
         'img2': url_for('static', filename=img2) if img2 else '',
         'buy': 'Add to Cart',
-        'qty': 1
+        'qty': 1,
+        'is_new': is_new
     })
 
 @products_bp.route('/api/products/<int:id>/related', methods=['GET'])

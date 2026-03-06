@@ -17,6 +17,8 @@ class Product(db.Model):
     product_type = db.Column(db.String(100))
     primary_image = db.Column(db.String(500))
     secondary_image = db.Column(db.String(500))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 class CartItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)

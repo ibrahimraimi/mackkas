@@ -11,6 +11,10 @@ def index():
 def product_catalog():
     return render_template('product-catalog.html')
 
+@main_bp.route('/new-in')
+def new_in_page():
+    return render_template('product-catalog.html', is_new_in=True)
+
 @main_bp.route('/login')
 def login_page():
     return render_template('login-page.html')

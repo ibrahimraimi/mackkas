@@ -52,6 +52,7 @@ async function FetchProducts() {
         if (Active_Filters.page) queryParams.set('page', Active_Filters.page);
         if (Active_Filters.minPrice) queryParams.set('min_price', Active_Filters.minPrice);
         if (Active_Filters.maxPrice) queryParams.set('max_price', Active_Filters.maxPrice);
+        if (window.location.pathname === '/new-in') queryParams.set('new_only', 'true');
         Active_Filters.clothType.forEach(type => queryParams.append('cloth_type', type));
 
         const response = await fetch(`/api/products?${queryParams.toString()}`);
@@ -240,6 +241,7 @@ function RenderProducts(products) {
     Product_Grid.innerHTML = products.map(product => `
         <div class="product-card" onclick="window.location.href='/product/${product.id}'">
             <div class="product-card__image-wrapper">
+                ${product.is_new ? '<span class="product-badge">New</span>' : ''}
                 <img src="${product.img1}" alt="${product.name}" class="product-card__image" loading="lazy">
             </div>
             <div class="product-card__details">
