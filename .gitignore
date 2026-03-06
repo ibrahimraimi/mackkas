@@ -156,7 +156,3 @@ cython_debug/
 rename-project-files.py
 rename_images.py
 rename-images.py
-
-# Local Assets
-static/images/
-static/datasets/
