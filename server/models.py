@@ -20,6 +20,41 @@ class Product(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    @property
+    def primary_url(self):
+        return self._resolve_image_url(self.primary_image)
+
+    @property
+    def secondary_url(self):
+        return self._resolve_image_url(self.secondary_image)
+
+    def _resolve_image_url(self, image_path):
+        if not image_path:
+            return None
+        
+        # If it's already a full URL, return it
+        if image_path.startswith(('http://', 'https://')):
+            return image_path
+            
+        from flask import current_app, url_for
+        import os
+
+        # If BASE_IMAGE_URL is configured, prepend it
+        base_url = current_app.config.get('BASE_IMAGE_URL')
+        if base_url:
+            return f"{base_url.rstrip('/')}/{image_path.lstrip('/')}"
+
+        # Otherwise, serve from static folder with local path check
+        # Check for webp version for local files
+        try:
+            webp_path = image_path.rsplit('.', 1)[0] + '.webp'
+            if os.path.exists(os.path.join(current_app.static_folder, webp_path)):
+                return url_for('static', filename=webp_path)
+        except Exception:
+            pass
+
+        return url_for('static', filename=image_path)
+
 class CartItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

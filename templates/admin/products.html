@@ -36,7 +36,7 @@
                 <tr>
                     <td>
                         {% if product.primary_image %}
-                        <img src="{{ url_for('static', filename=product.primary_image) }}" alt="" class="product-thumb">
+                        <img src="{{ product.primary_url }}" alt="" class="product-thumb">
                         {% else %}
                         <div class="product-thumb" style="display:flex; align-items:center; justify-content:center; background:var(--color-neutral-50); font-size:10px; color:var(--color-neutral-400);">No Image</div>
                         {% endif %}

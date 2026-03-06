@@ -55,19 +55,6 @@ def get_products():
     products = pagination.items
     result = []
     for p in products:
-        img1 = p.primary_image
-        if img1 and not img1.startswith('http'):
-            # Check for webp version first
-            webp_path = img1.rsplit('.', 1)[0] + '.webp'
-            if os.path.exists(os.path.join(current_app.static_folder, webp_path)):
-                img1 = webp_path
-        
-        img2 = p.secondary_image
-        if img2 and not img2.startswith('http'):
-            webp_path = img2.rsplit('.', 1)[0] + '.webp'
-            if os.path.exists(os.path.join(current_app.static_folder, webp_path)):
-                img2 = webp_path
-
         from datetime import datetime, timedelta
         is_new = False
         if p.created_at:
@@ -81,8 +68,8 @@ def get_products():
             'price': f'${p.price:,.2f}',
             'category': p.category,
             'cloth': p.product_type,
-            'img1': url_for('static', filename=img1),
-            'img2': url_for('static', filename=img2) if img2 else url_for('static', filename=img1),
+            'img1': p.primary_url,
+            'img2': p.secondary_url or p.primary_url,
             'buy': 'Add to Cart',
             'qty': 1,
             'is_new': is_new
@@ -110,18 +97,7 @@ def get_products_meta():
 @products_bp.route('/api/products/<int:id>', methods=['GET'])
 def get_product(id):
     p = Product.query.get_or_404(id)
-    img1 = p.primary_image
-    if img1 and not img1.startswith('http'):
-        webp_path = img1.rsplit('.', 1)[0] + '.webp'
-        if os.path.exists(os.path.join(current_app.static_folder, webp_path)):
-            img1 = webp_path
     
-    img2 = p.secondary_image
-    if img2 and not img2.startswith('http'):
-        webp_path = img2.rsplit('.', 1)[0] + '.webp'
-        if os.path.exists(os.path.join(current_app.static_folder, webp_path)):
-            img2 = webp_path
-
     from datetime import datetime, timedelta
     is_new = False
     if p.created_at:
@@ -135,8 +111,8 @@ def get_product(id):
         'price': f'${p.price:,.2f}',
         'category': p.category,
         'cloth': p.product_type,
-        'img1': url_for('static', filename=img1),
-        'img2': url_for('static', filename=img2) if img2 else '',
+        'img1': p.primary_url,
+        'img2': p.secondary_url or '',
         'buy': 'Add to Cart',
         'qty': 1,
         'is_new': is_new
@@ -152,18 +128,12 @@ def get_related_products(id):
     
     result = []
     for p in related:
-        img1 = p.primary_image
-        if img1 and not img1.endswith('.webp'):
-            webp_path = img1.rsplit('.', 1)[0] + '.webp'
-            if os.path.exists(os.path.join(current_app.static_folder, webp_path)):
-                img1 = webp_path
-        
         result.append({
             'id': p.id,
             'name': p.name,
             'price': f'${p.price:,.2f}',
             'Price': p.price,
             'category': p.category,
-            'img1': url_for('static', filename=img1)
+            'img1': p.primary_url
         })
     return jsonify(result)
