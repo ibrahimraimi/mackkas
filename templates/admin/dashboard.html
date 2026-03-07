@@ -15,11 +15,16 @@
     <div class="admin-nav">
         <a href="{{ url_for('admin.dashboard') }}" class="button button--primary">Dashboard</a>
         <a href="{{ url_for('admin.products') }}" class="button button--outline">Manage Products</a>
+        <a href="{{ url_for('admin.categories') }}" class="button button--outline">Manage Categories</a>
         <a href="{{ url_for('main.index') }}" class="button button--outline">Storefront</a>
         <a href="{{ url_for('auth.logout') }}" class="button button--outline logout-btn">Logout</a>
     </div>
 
     <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-value">{{ category_count }}</span>
+            <span class="stat-label">Total Categories</span>
+        </div>
         <div class="stat-card">
             <span class="stat-value">{{ product_count }}</span>
             <span class="stat-label">Total Products</span>

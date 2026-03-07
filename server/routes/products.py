@@ -31,8 +31,21 @@ def get_products():
             Product.category.ilike(search)
         ))
 
+    from ..models import Category
     if category:
-        query = query.filter(Product.category == category)
+        # Find ALL categories with this name (e.g. 'Accessories' under both Men and Women)
+        matching_cats = Category.query.filter(Category.name.ilike(category)).all()
+        if matching_cats:
+            cat_ids = []
+            for cat in matching_cats:
+                cat_ids.append(cat.id)
+                # Include subcategories for each matching category
+                for sub in cat.subcategories:
+                    cat_ids.append(sub.id)
+            query = query.filter(Product.category_id.in_(cat_ids))
+        else:
+            # Fallback to legacy string matching
+            query = query.filter(Product.category.ilike(category))
     
     if cloth_type:
         query = query.filter(Product.product_type.in_(cloth_type))
@@ -58,7 +71,7 @@ def get_products():
         from datetime import datetime, timedelta
         is_new = False
         if p.created_at:
-            is_new = p.created_at >= (datetime.utcnow() - timedelta(days=14))
+            is_new = p.created_at >= (datetime.utcnow() - timedelta(hours=24))
 
         result.append({
             'id': p.id,
@@ -86,11 +99,15 @@ def get_products():
 
 @products_bp.route('/api/products/meta', methods=['GET'])
 def get_products_meta():
-    categories = db.session.query(Product.category).distinct().all()
+    from ..models import Category
+    # Get root categories (Men, Women, etc.)
+    root_categories = Category.query.filter_by(parent_id=None).all()
+    categories_list = [c.name for c in root_categories]
+    
     cloth_types = db.session.query(Product.product_type).distinct().all()
     
     return jsonify({
-        'categories': [c[0] for c in categories if c[0]],
+        'categories': categories_list,
         'cloth_types': [t[0] for t in cloth_types if t[0]]
     })
 
@@ -101,7 +118,7 @@ def get_product(id):
     from datetime import datetime, timedelta
     is_new = False
     if p.created_at:
-        is_new = p.created_at >= (datetime.utcnow() - timedelta(days=14))
+        is_new = p.created_at >= (datetime.utcnow() - timedelta(hours=24))
 
     return jsonify({
         'id': p.id,

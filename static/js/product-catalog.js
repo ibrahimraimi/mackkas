@@ -90,28 +90,61 @@ async function SetupCategories() {
     try {
         const response = await fetch('/api/products/meta');
         const data = await response.json();
-        const categories = data.categories;
-        const clothTypes = data.cloth_types;
+        const categories = (data.categories || []).map(c => c.trim());
+        const clothTypes = (data.cloth_types || []).map(t => t.trim());
+        
+        const currentActive = (Active_Filters.category || "all").toLowerCase().trim();
 
-        // Render pills
+        // Render pills with initial active state
         if (Category_Pill_List) {
-            Category_Pill_List.innerHTML = `
-                <div class="category-pill" onclick="SetCategory(null, this)">All</div>
-                ${categories.map(cat => `<div class="category-pill" onclick="SetCategory('${cat}', this)">${cat}</div>`).join("")}
-            `;
+            Category_Pill_List.innerHTML = "";
+            
+            // All Pill
+            const btnAll = document.createElement("button");
+            btnAll.className = `category-pill ${currentActive === 'all' ? 'active' : ''}`;
+            btnAll.setAttribute("data-category", "all");
+            btnAll.textContent = "All";
+            btnAll.addEventListener("click", () => SetCategory(null));
+            Category_Pill_List.appendChild(btnAll);
+
+            // Category Pills
+            categories.forEach(cat => {
+                const normCat = cat.toLowerCase();
+                const btn = document.createElement("button");
+                btn.className = `category-pill ${normCat === currentActive ? 'active' : ''}`;
+                btn.setAttribute("data-category", normCat);
+                btn.textContent = cat;
+                btn.addEventListener("click", () => SetCategory(cat));
+                Category_Pill_List.appendChild(btn);
+            });
         }
 
         // Render filter drawer options
         if (Category_Filter_Options) {
-            Category_Filter_Options.innerHTML = categories.map(cat => `
-                <div class="filter-option" onclick="ToggleFilter('category', '${cat}', this)">${cat}</div>
-            `).join("");
+            Category_Filter_Options.innerHTML = "";
+            categories.forEach(cat => {
+                const normCat = cat.toLowerCase();
+                const btn = document.createElement("button");
+                btn.className = `filter-option ${normCat === currentActive ? 'active' : ''}`;
+                btn.setAttribute("data-category", normCat);
+                btn.textContent = cat;
+                btn.addEventListener("click", () => ToggleFilter('category', cat));
+                Category_Filter_Options.appendChild(btn);
+            });
         }
 
         if (Cloth_Type_Filter_Options) {
-            Cloth_Type_Filter_Options.innerHTML = clothTypes.map(type => `
-                <div class="filter-option" onclick="ToggleFilter('clothType', '${type}', this)">${type}</div>
-            `).join("");
+            Cloth_Type_Filter_Options.innerHTML = "";
+            const selectedTypes = Active_Filters.clothType.map(t => t.toLowerCase());
+            clothTypes.forEach(type => {
+                const normType = type.toLowerCase();
+                const btn = document.createElement("button");
+                btn.className = `filter-option ${selectedTypes.includes(normType) ? 'active' : ''}`;
+                btn.setAttribute("data-type", normType);
+                btn.textContent = type;
+                btn.addEventListener("click", () => ToggleFilter('clothType', type));
+                Cloth_Type_Filter_Options.appendChild(btn);
+            });
         }
         SyncUIState();
     } catch (error) {
@@ -126,51 +159,72 @@ function ToggleFilterMenu() {
     document.body.style.overflow = Filter_Drawer.classList.contains("open_filters") ? "hidden" : "";
 }
 
-function SetCategory(cat, el) {
-    Active_Filters.category = cat;
+function SetCategory(cat) {
+    Active_Filters.category = (cat && cat.toLowerCase() !== "all") ? cat.trim() : null;
     Active_Filters.page = 1; // Reset to page 1
 
-    Current_Category_Title.textContent = cat ? `${cat.charAt(0).toUpperCase() + cat.slice(1)} Collection` : "All Collection";
+    const displayCat = Active_Filters.category || "All";
+    Current_Category_Title.textContent = `${displayCat.charAt(0).toUpperCase() + displayCat.slice(1)} Collection`;
     
+    SyncUIState();
     FetchProducts();
 }
 
-function ToggleFilter(type, value, el) {
+function ToggleFilter(type, value) {
     if (type === 'category') {
-        Active_Filters.category = Active_Filters.category === value ? null : value;
+        const val = (value && value.toLowerCase() !== "all") ? value.trim() : null;
+        Active_Filters.category = (Active_Filters.category && Active_Filters.category.toLowerCase() === (val ? val.toLowerCase() : null)) ? null : val;
     } else if (type === 'clothType') {
-        const index = Active_Filters.clothType.indexOf(value);
+        const trimmedVal = value ? value.trim() : "";
+        const index = Active_Filters.clothType.map(t => t.toLowerCase()).indexOf(trimmedVal.toLowerCase());
         if (index > -1) Active_Filters.clothType.splice(index, 1);
-        else Active_Filters.clothType.push(value);
+        else Active_Filters.clothType.push(trimmedVal);
     }
     SyncUIState();
 }
 
 function SyncUIState() {
+    // Determine the truly normalized active category
+    let normalized = "all";
+    if (Active_Filters.category) {
+        const temp = Active_Filters.category.toString().trim().toLowerCase();
+        if (temp !== "" && temp !== "all") {
+            normalized = temp;
+        }
+    }
+    const activeCat = normalized;
+
     // Sync Category Pills
     document.querySelectorAll(".category-pill").forEach(pill => {
-        const pillText = pill.textContent.trim().toLowerCase();
-        const isActive = (pillText === "all" && !Active_Filters.category) || (pillText === Active_Filters.category);
-        pill.classList.toggle("active", isActive);
+        pill.classList.remove("active"); // Force remove for all first
+        const catVal = (pill.getAttribute("data-category") || "").toLowerCase().trim();
+        if (catVal === activeCat) {
+            pill.classList.add("active");
+        }
     });
 
     // Sync Filter Drawer - Categories
     document.querySelectorAll("#categoryFilterOptions .filter-option").forEach(opt => {
-        const optText = opt.textContent.trim();
-        opt.classList.toggle("active", optText === Active_Filters.category);
+        opt.classList.remove("active");
+        const catVal = (opt.getAttribute("data-category") || "").toLowerCase().trim();
+        if (catVal === activeCat) {
+            opt.classList.add("active");
+        }
     });
 
     // Sync Filter Drawer - Cloth Types
+    const lowerSelectedTypes = (Active_Filters.clothType || []).map(t => t.toString().trim().toLowerCase());
     document.querySelectorAll("#clothTypeFilterOptions .filter-option").forEach(opt => {
-        const optText = opt.textContent.trim();
-        opt.classList.toggle("active", Active_Filters.clothType.includes(optText));
+        const optType = (opt.getAttribute("data-type") || "").toLowerCase().trim();
+        opt.classList.toggle("active", lowerSelectedTypes.includes(optType));
     });
 
     // Sync Custom Sort Dropdown
     const sortOptions = document.querySelectorAll(".custom-dropdown__option");
+    const currentSort = (Active_Filters.sort || "featured").toLowerCase();
     sortOptions.forEach(opt => {
-        const val = opt.getAttribute("data-value");
-        const isActive = val === Active_Filters.sort;
+        const val = (opt.getAttribute("data-value") || "").toLowerCase();
+        const isActive = val === currentSort;
         opt.classList.toggle("active", isActive);
         if (isActive) {
             const selectedText = document.getElementById("sortSelectedText");
@@ -222,11 +276,7 @@ function ResetFilters() {
     Active_Filters = { category: null, clothType: [], minPrice: null, maxPrice: null, sort: 'featured', page: 1 };
     Min_Price_Input.value = "";
     Max_Price_Input.value = "";
-    document.querySelectorAll(".filter-option").forEach(opt => opt.classList.remove("active"));
-    document.querySelectorAll(".category-pill").forEach(p => p.classList.remove("active"));
-    if (document.querySelector(".category-pill")) {
-        document.querySelector(".category-pill").classList.add("active");
-    }
+    SyncUIState();
     Current_Category_Title.textContent = "All Collection";
     FetchProducts();
 }

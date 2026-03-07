@@ -8,12 +8,23 @@ class User(db.Model):
     password_hash = db.Column(db.String(255), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    parent_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
+    
+    __table_args__ = (db.UniqueConstraint('name', 'parent_id', name='_category_name_parent_uc'),)
+    
+    parent = db.relationship('Category', remote_side=[id], backref='subcategories')
+    products = db.relationship('Product', backref='category_rel', lazy=True)
+
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text)
     price = db.Column(db.Float, nullable=False)
-    category = db.Column(db.String(100))
+    category = db.Column(db.String(100)) # Legacy string field
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
     product_type = db.Column(db.String(100))
     primary_image = db.Column(db.String(500))
     secondary_image = db.Column(db.String(500))
