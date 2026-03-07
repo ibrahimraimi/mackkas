@@ -13,7 +13,7 @@
     <section class="hero">
         <div class="hero__grid">
             <div class="hero__item">
-                <img src="{{ url_for('static', filename='assets/earrings-collection.png') }}" alt="New Collection" class="hero__image">
+                <img src="{{ url_for('static', filename='assets/landing-page-hero-photo-earrings.png') }}" alt="New Collection" class="hero__image">
                 <div class="hero__content">
                     <span class="hero__eyebrow">The New Season</span>
                     <h1 class="hero__title">Timeless Essentials</h1>
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="hero__item">
-                <img src="{{ url_for('static', filename='assets/link-bracelet.png') }}" alt="Featured Style" class="hero__image">
+                <img src="{{ url_for('static', filename='assets/landing-page-hero-photo-chain.png') }}" alt="Featured Style" class="hero__image">
             </div>
         </div>
     </section>
@@ -30,22 +30,22 @@
     <section class="categories">
         <div class="container">
             <div class="categories__grid">
-                <a href="{{ url_for('main.product_catalog') }}" class="category-card">
-                    <img src="{{ url_for('static', filename='assets/man-standing-on-suit.jpg') }}" alt="Men" class="category-card__image">
+                <a href="{{ url_for('main.product_catalog', category='men') }}" class="category-card">
+                    <img src="{{ url_for('static', filename='assets/landing-page-showcase-man.jpg') }}" alt="Men" class="category-card__image">
                     <div class="category-card__content">
                         <h3 class="category-card__title">Men</h3>
                         <span class="category-card__count">24 Items</span>
                     </div>
                 </a>
-                <a href="{{ url_for('main.product_catalog') }}" class="category-card">
-                    <img src="{{ url_for('static', filename='assets/nikhil-uttam.jpg') }}" alt="Women" class="category-card__image">
+                <a href="{{ url_for('main.product_catalog', category='women') }}" class="category-card">
+                    <img src="{{ url_for('static', filename='assets/landing-page-showcase-woman.jpg') }}" alt="Women" class="category-card__image">
                     <div class="category-card__content">
                         <h3 class="category-card__title">Women</h3>
                         <span class="category-card__count">32 Items</span>
                     </div>
                 </a>
-                <a href="{{ url_for('main.product_catalog') }}" class="category-card">
-                    <img src="{{ url_for('static', filename='assets/watch.jpg') }}" alt="Accessories" class="category-card__image">
+                <a href="{{ url_for('main.product_catalog', category='accessories') }}" class="category-card">
+                    <img src="{{ url_for('static', filename='assets/landing-page-showcase-chain.jpg') }}" alt="Accessories" class="category-card__image">
                     <div class="category-card__content">
                         <h3 class="category-card__title">Accessories</h3>
                         <span class="category-card__count">18 Items</span>
